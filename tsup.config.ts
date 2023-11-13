@@ -1,9 +1,11 @@
 import { defineConfig } from "tsup";
 
 export default defineConfig({
-  entry: ["src"],
+  entry: ["src/*"],
   dts: true,
   format: "esm",
   sourcemap: true,
   clean: true,
+  splitting: false,
+  external: ["bun:test"],
 });
