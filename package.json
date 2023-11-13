@@ -1,14 +1,18 @@
 {
   "name": "mockemon",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "repository": "https://github.com/Glinkis/mockemon.git",
   "author": "Victor Glindås <glinkis@gmail.com>",
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "build": "bun tsup src"
+    "build": "bun tsup src",
+    "prepublishOnly": "bun run build"
   },
+  "files": [
+    "dist"
+  ],
   "devDependencies": {
     "bun-types": "^1.0.11",
     "prettier": "^3.1.0",
