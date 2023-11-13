@@ -1,0 +1,8 @@
+{
+  "name": "mockemon",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/Glinkis/mockemon.git",
+  "author": "Victor Glindås <glinkis@gmail.com>",
+  "license": "MIT"
+}
