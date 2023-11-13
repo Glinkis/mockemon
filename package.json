@@ -22,5 +22,8 @@
     "@faker-js/faker": {
       "optional": true
     }
+  },
+  "prettier": {
+    "printWidth": 120
   }
 }
