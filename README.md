@@ -1,6 +1,6 @@
 # mockemon
 
-## A mocking utility library!
+## A mocking utility library
 
 ### Installation
 
