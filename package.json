@@ -1,11 +1,13 @@
 {
   "name": "mockemon",
-  "version": "1.0.2",
-  "main": "index.js",
+  "version": "1.0.3",
   "repository": "https://github.com/Glinkis/mockemon.git",
   "author": "Victor Glindås <glinkis@gmail.com>",
-  "type": "module",
   "license": "MIT",
+  "type": "module",
+  "exports": {
+    "./builder": "./dist/builder.js"
+  },
   "scripts": {
     "build": "bun tsup src",
     "prepublishOnly": "bun run build"
@@ -29,5 +31,10 @@
   },
   "prettier": {
     "printWidth": 120
-  }
+  },
+  "keywords": [
+    "mocking",
+    "faker",
+    "testing"
+  ]
 }

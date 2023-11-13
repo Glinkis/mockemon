@@ -19,7 +19,7 @@ bun add mockemon
 The mock builder is a utility that allows you to create strongly typed mocks for your tests.
 
 ```ts
-import { configureMockBuilder } from "mockemon";
+import { configureMockBuilder } from "mockemon/builder";
 import { faker } from "@faker-js/faker";
 
 const { createMockBuilder } = configureMockBuilder({
