@@ -1,0 +1,16 @@
+# Dependency directories
+
+node_modules/
+
+# TypeScript cache
+
+\*.tsbuildinfo
+
+# IntelliJ based IDEs
+.idea
+
+# Finder (MacOS) folder config
+.DS_Store
+
+# Build directory
+dist/

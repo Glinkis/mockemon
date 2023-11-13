@@ -4,5 +4,14 @@
   "main": "index.js",
   "repository": "https://github.com/Glinkis/mockemon.git",
   "author": "Victor Glindås <glinkis@gmail.com>",
-  "license": "MIT"
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "build": "bun tsup src"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2",
+    "prettier": "^3.1.0",
+    "tsup": "^7.2.0"
+  }
 }
