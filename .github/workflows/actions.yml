@@ -1,3 +1,5 @@
+name: "Actions"
+
 on:
   push:
     branches:
