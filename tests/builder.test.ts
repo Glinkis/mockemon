@@ -39,4 +39,36 @@ describe("builder", () => {
 
     expect(mocked).toEqual({ foo: "Parrot", bar: mocked.bar });
   });
+
+  it("should allow mocking primitive values", () => {
+    const buildMock = createMockBuilder((f) => f.animal.cat());
+
+    const mocked = buildMock();
+
+    expect(mocked).toEqual(mocked);
+  });
+
+  it("should allow overriding primitive value mocks", () => {
+    const buildMock = createMockBuilder<string | null>((f) => f.animal.cat());
+
+    const mocked1 = buildMock("Parrot");
+
+    expect(mocked1).toEqual("Parrot");
+
+    const mocked2 = buildMock(null);
+
+    expect(mocked2).toEqual(null);
+  });
+
+  it("should allow overriding primitive value mocks with a function", () => {
+    const buildMock = createMockBuilder<string | null>((f) => f.animal.cat());
+
+    const mocked1 = buildMock(() => "Parrot");
+
+    expect(mocked1).toEqual("Parrot");
+
+    const mocked2 = buildMock(() => null);
+
+    expect(mocked2).toEqual(null);
+  });
 });

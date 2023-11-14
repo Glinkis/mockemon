@@ -19,17 +19,23 @@ type MockBuilder<TFaker, TValue> = {
 };
 
 export function configureMockBuilder<TFaker>(config: MockBuilderInitialConfig<TFaker>) {
-  function createMockBuilder<TValue extends object>(
-    build: DefaultBuilder<TFaker, TValue>,
-  ): MockBuilder<TFaker, TValue> {
+  function createMockBuilder<TValue>(build: DefaultBuilder<TFaker, TValue>): MockBuilder<TFaker, TValue> {
     return function buildMock<TOverrides extends Partial<TValue>>(overrides?: OverrideBuilder<TFaker, TOverrides>) {
       const defaultMock = build(config.faker);
 
-      if (typeof overrides === "function") {
-        return Object.assign(defaultMock, overrides(config.faker));
+      if (typeof defaultMock === "object" && defaultMock !== null) {
+        if (typeof overrides === "function") {
+          return Object.assign(defaultMock, overrides(config.faker));
+        }
+
+        return Object.assign(defaultMock, overrides);
       }
 
-      return Object.assign(defaultMock, overrides);
+      if (typeof overrides === "function") {
+        return overrides(config.faker);
+      }
+
+      return defaultMock;
     };
   }
 
