@@ -1,6 +1,8 @@
 import { describe, expect, it } from "bun:test";
-import { configureMockBuilder } from "../src/builder.js";
+import { attest } from "@arktype/attest";
 import { faker } from "@faker-js/faker";
+
+import { configureMockBuilder } from "../src/builder.js";
 
 describe("builder", () => {
   const { createMockBuilder } = configureMockBuilder({
@@ -36,6 +38,8 @@ describe("builder", () => {
     }));
 
     const mocked = buildMock((f) => ({ foo: "Parrot" as const }));
+
+    attest<{ foo: "Parrot"; bar: string }>(mocked);
 
     expect(mocked).toEqual({ foo: "Parrot", bar: mocked.bar });
   });
