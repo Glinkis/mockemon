@@ -68,7 +68,3 @@ const mock3 = mockBuilder((f) => ({
 [downloads-badge]: https://img.shields.io/npm/dm/mockemon.svg?style=flat-square
 [package]: https://www.npmjs.com/package/mockemon
 [npmtrends]: http://www.npmtrends.com/mockemon
-
-```
-
-```
