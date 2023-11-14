@@ -2,6 +2,9 @@
 
 ## A mocking utility library
 
+[![version][version-badge]][package]
+[![downloads][downloads-badge]][npmtrends]
+
 ### Installation
 
 ```sh
@@ -51,3 +54,8 @@ const mock2 = mockBuilder({
 });
 // { name: string, pet: "Daisy" }
 ```
+
+[version-badge]: https://img.shields.io/npm/v/mockemon.svg?style=flat-square
+[downloads-badge]: https://img.shields.io/npm/dm/mockemon.svg?style=flat-square
+[package]: https://www.npmjs.com/package/mockemon
+[npmtrends]: http://www.npmtrends.com/mockemon
