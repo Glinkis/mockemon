@@ -18,7 +18,7 @@ describe("builder", () => {
     expect(mocked).toEqual({ foo: mocked.foo, bar: mocked.bar });
   });
 
-  it("should override the default mock", () => {
+  it("should allow overriding the default mock", () => {
     const buildMock = createMockBuilder((f) => ({
       foo: f.animal.cat(),
       bar: f.animal.dog(),
@@ -27,5 +27,16 @@ describe("builder", () => {
     const mocked = buildMock({ foo: "baz" });
 
     expect(mocked).toEqual({ foo: "baz", bar: mocked.bar });
+  });
+
+  it("should allow overriding the default mock with a function", () => {
+    const buildMock = createMockBuilder((f) => ({
+      foo: f.animal.cat(),
+      bar: f.animal.dog(),
+    }));
+
+    const mocked = buildMock((f) => ({ foo: "Parrot" as const }));
+
+    expect(mocked).toEqual({ foo: "Parrot", bar: mocked.bar });
   });
 });
