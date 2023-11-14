@@ -9,7 +9,7 @@
     "./builder": "./dist/builder.js"
   },
   "scripts": {
-    "test": "bun test --preload ./tests/setup.ts",
+    "test": "bun test",
     "build": "rm -rf ./dist/ && bun tsc  --project tsconfig.build.json",
     "prepublishOnly": "bun run build"
   },
