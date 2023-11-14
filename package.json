@@ -10,7 +10,7 @@
   },
   "scripts": {
     "test": "bun test --preload ./tests/setup.ts",
-    "build": "bun tsc --project tsconfig.build.json ",
+    "build": "rm -rf ./dist/ && bun tsc  --project tsconfig.build.json",
     "prepublishOnly": "bun run build"
   },
   "files": [
