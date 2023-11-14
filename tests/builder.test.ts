@@ -49,7 +49,7 @@ describe("builder", () => {
   });
 
   it("should allow overriding primitive value mocks", () => {
-    const buildMock = createMockBuilder<string | null>((f) => f.animal.cat());
+    const buildMock = createMockBuilder<string | null | undefined>((f) => f.animal.cat());
 
     const mocked1 = buildMock("Parrot");
 
@@ -58,10 +58,14 @@ describe("builder", () => {
     const mocked2 = buildMock(null);
 
     expect(mocked2).toEqual(null);
+
+    const mocked3 = buildMock(undefined);
+
+    expect(mocked3).toEqual(undefined);
   });
 
   it("should allow overriding primitive value mocks with a function", () => {
-    const buildMock = createMockBuilder<string | null>((f) => f.animal.cat());
+    const buildMock = createMockBuilder<string | null | undefined>((f) => f.animal.cat());
 
     const mocked1 = buildMock(() => "Parrot");
 
@@ -70,5 +74,9 @@ describe("builder", () => {
     const mocked2 = buildMock(() => null);
 
     expect(mocked2).toEqual(null);
+
+    const mocked3 = buildMock(() => undefined);
+
+    expect(mocked3).toEqual(undefined);
   });
 });
