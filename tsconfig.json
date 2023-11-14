@@ -1,13 +1,12 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "ES2020",
+    "target": "ESNext",
+    "module": "ESNext",
     "noEmit": true,
     "esModuleInterop": true,
     "moduleDetection": "force",
     "moduleResolution": "Bundler",
     "forceConsistentCasingInFileNames": true,
-    "types": ["bun-types"],
     "strict": true
   },
   "exclude": ["dist", "node_modules"]
