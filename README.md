@@ -64,6 +64,20 @@ const mock3 = mockBuilder((f) => ({
 // { name: "John" | "Jane", pet: string }
 ```
 
+#### Primitive Values
+
+You can also create builders for primitive values.
+
+```ts
+const mockBuilder = createMockBuilder((f) => f.helpers.random.number());
+
+const mock1 = mockBuilder();
+// number
+
+const mock2 = mockBuilder(5);
+// 5
+```
+
 [version-badge]: https://img.shields.io/npm/v/mockemon.svg?style=flat-square
 [downloads-badge]: https://img.shields.io/npm/dm/mockemon.svg?style=flat-square
 [package]: https://www.npmjs.com/package/mockemon
