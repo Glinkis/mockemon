@@ -33,7 +33,7 @@ const { createMockBuilder } = configureMockBuilder({
 
 // Create a basic mock builder.
 const mockBuilder = createMockBuilder((f) => ({
-  name: f.name.findName(),
+  name: f.person.firstName(),
   pet: f.animal.cat(),
 }));
 ```
@@ -55,7 +55,20 @@ const mock2 = mockBuilder({
 // { name: string, pet: "Daisy" }
 ```
 
+You can also pass a function, which will be called with the provided "faker" instance.
+
+```ts
+const mock3 = mockBuilder((f) => ({
+  name: f.helpers.arrayElement(["John", "Jane"] as const),
+}));
+// { name: "John" | "Jane", pet: string }
+```
+
 [version-badge]: https://img.shields.io/npm/v/mockemon.svg?style=flat-square
 [downloads-badge]: https://img.shields.io/npm/dm/mockemon.svg?style=flat-square
 [package]: https://www.npmjs.com/package/mockemon
 [npmtrends]: http://www.npmtrends.com/mockemon
+
+```
+
+```
