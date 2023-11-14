@@ -15,7 +15,7 @@ type OverrideBuilder<TFaker, TOverrides> = TOverrides | ((faker: TFaker) => TOve
 
 type MockBuilder<TFaker, TValue> = {
   (): TValue;
-  <TOverrides extends Partial<TValue>>(overrides: OverrideBuilder<TFaker, TOverrides>): TValue & TOverrides;
+  <TOverrides extends Readonly<Partial<TValue>>>(overrides: OverrideBuilder<TFaker, TOverrides>): TValue & TOverrides;
 };
 
 export function configureMockBuilder<TFaker>(config: MockBuilderInitialConfig<TFaker>) {
