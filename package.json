@@ -35,7 +35,11 @@
   },
   "keywords": [
     "mocking",
+    "mock",
     "faker",
-    "testing"
+    "test",
+    "testing",
+    "builder",
+    "factory"
   ]
 }
