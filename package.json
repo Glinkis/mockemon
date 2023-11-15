@@ -1,10 +1,9 @@
 {
   "name": "mockemon",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "repository": "https://github.com/Glinkis/mockemon.git",
   "author": "Victor Glindås <glinkis@gmail.com>",
   "license": "MIT",
-  "type": "module",
   "exports": {
     "./*": {
       "import": "./dist/esm/*.js",
