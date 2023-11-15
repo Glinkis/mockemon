@@ -1,6 +1,8 @@
 <div align="center">
-  <h1>Mockemon</h1>
+  <h1>Mockemon  🏗️</h1>
+
   <p>A tiny agnostic mocking utility library, with a strong focus on type safety.</p>
+
   <hr/>
 </div>
 
@@ -32,8 +34,6 @@ bun add mockemon
 
 The builder utility allows you to create strongly typed mocks for your tests, or anywhere else.
 
-</br>
-
 ### Configuration
 
 To use the builder, you must first configure it. This is done by importing and calling `configureMockBuilder`
@@ -48,8 +48,6 @@ const createMockBuilder = configureMockBuilder({
   faker: faker,
 });
 ```
-
-</br>
 
 ### Usage
 
@@ -68,8 +66,6 @@ The mock builder will automatically infer the type from the provided mock builde
 const petOwner = buildPetOwner();
 // { name: string, pet: string }
 ```
-
-</br>
 
 ### Overrides
 
@@ -90,8 +86,6 @@ const mock3 = mockBuilder((f) => ({
 }));
 // { name: string, pet: "Daisy" | "Bella" | "Luna" }
 ```
-
-</br>
 
 ### Mocking Other Types
 
