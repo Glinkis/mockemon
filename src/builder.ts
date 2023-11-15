@@ -9,22 +9,22 @@ interface MockBuilderInitialConfig<TFaker> {
   readonly faker: TFaker;
 }
 
-type DefaultBuilder<TFaker, TValue> = (faker: TFaker) => TValue;
-
-type OverrideBuilder<TFaker, TOverrides> = TOverrides | ((faker: TFaker) => TOverrides);
-
 type Overrideable<TValue> = {
   readonly [P in keyof TValue]?: TValue[P];
 };
 
-type MockBuilder<TFaker, TValue> = {
-  (): TValue;
-  <TOverrides extends Overrideable<TValue>>(overrides: OverrideBuilder<TFaker, TOverrides>): TValue & TOverrides;
-};
-
 export function configureMockBuilder<TFaker>(config: MockBuilderInitialConfig<TFaker>) {
-  function createMockBuilder<TValue>(build: DefaultBuilder<TFaker, TValue>): MockBuilder<TFaker, TValue> {
-    return function buildMock<TOverrides extends Partial<TValue>>(overrides?: OverrideBuilder<TFaker, TOverrides>) {
+  type DefaultBuilder<TValue> = (faker: TFaker) => TValue;
+
+  type OverrideBuilder<TOverrides> = TOverrides | ((faker: TFaker) => TOverrides);
+
+  type MockBuilder<TValue> = {
+    (): TValue;
+    <TOverrides extends Overrideable<TValue>>(overrides: OverrideBuilder<TOverrides>): TValue & TOverrides;
+  };
+
+  function createMockBuilder<TValue>(build: DefaultBuilder<TValue>): MockBuilder<TValue> {
+    return function buildMock<TOverrides extends Partial<TValue>>(overrides?: OverrideBuilder<TOverrides>) {
       const defaultMock = build(config.faker);
 
       if (typeof defaultMock === "object" && defaultMock !== null) {
