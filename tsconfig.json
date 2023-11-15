@@ -7,6 +7,8 @@
     "moduleDetection": "force",
     "moduleResolution": "Bundler",
     "forceConsistentCasingInFileNames": true,
+    "types": ["bun-types"],
+    "skipLibCheck": true,
     "strict": true
   },
   "exclude": ["dist", "node_modules"]
