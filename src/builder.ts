@@ -29,18 +29,30 @@ export function configureMockBuilder<TFaker>(config: MockBuilderInitialConfig<TF
 
       if (typeof defaultMock === "object" && defaultMock !== null) {
         if (typeof overrides === "function") {
-          return Object.assign(defaultMock, overrides(config.faker));
+          const result = overrides(config.faker);
+
+          if (typeof result === "object" && result !== null) {
+            return Object.assign(defaultMock, result);
+          }
+
+          return result;
         }
 
-        return Object.assign(defaultMock, overrides);
+        if (arguments.length > 0) {
+          if (typeof overrides === "object" && overrides !== null) {
+            return Object.assign(defaultMock, overrides);
+          }
+
+          return overrides;
+        }
+
+        return defaultMock;
       }
 
       if (typeof overrides === "function") {
         return overrides(config.faker);
       }
 
-      // To support passing "undefined" as an override,
-      // we need to check the number of arguments intead of the actual value.
       if (arguments.length > 0) {
         return overrides;
       }
