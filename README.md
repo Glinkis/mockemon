@@ -1,7 +1,6 @@
 <div align="center">
   <h1>Mockemon</h1>
-  <p>A tiny agnostic mocking utility library, with a strong focus on type safety.</ö>
-  <br />
+  <p>A tiny agnostic mocking utility library, with a strong focus on type safety.</p>
   <hr/>
 </div>
 
@@ -31,11 +30,13 @@ bun add mockemon
 
 ## The Mock Builder
 
-The mock builder utility allows you to create strongly typed mocks for your tests, or anywhere else.
+The builder utility allows you to create strongly typed mocks for your tests, or anywhere else.
+
+</br>
 
 ### Configuration
 
-To use the mock builder, you must first configure it. This is done by importing and calling `configureMockBuilder`
+To use the builder, you must first configure it. This is done by importing and calling `configureMockBuilder`
 
 ```ts
 import { configureMockBuilder } from "mockemon/builder";
@@ -48,9 +49,11 @@ const { createMockBuilder } = configureMockBuilder({
 });
 ```
 
+</br>
+
 ### Usage
 
-Once the mock builder is configured, you can start creating mock builders.
+Once the builder is configured, you can start creating mock builders.
 
 ```ts
 const buildPetOwner = createMockBuilder((f) => ({
@@ -66,9 +69,11 @@ const petOwner = buildPetOwner();
 // { name: string, pet: string }
 ```
 
+</br>
+
 ### Overrides
 
-Passing a value to the mock builder will override the default value.
+Passing a value to the builder will override the default value.
 
 ```ts
 const mock2 = mockBuilder({
@@ -77,7 +82,7 @@ const mock2 = mockBuilder({
 // { name: string, pet: "Daisy" }
 ```
 
-It's also possible to pass a function to the mock builder. This function will be called with the provided faker instance, just like when setting up the builder initially.
+It's also possible to pass a function to the builder. This function will be called with the provided faker instance, just like when setting up the builder initially.
 
 ```ts
 const mock3 = mockBuilder((f) => ({
@@ -86,9 +91,11 @@ const mock3 = mockBuilder((f) => ({
 // { name: string, pet: "Daisy" | "Bella" | "Luna" }
 ```
 
+</br>
+
 ### Mocking Other Types
 
-The mock builder can also be used to mock other types of values as well, shich as primitives or arrays.
+The builder can also be used to mock other types of values as well, shich as primitives or arrays.
 
 ```ts
 // Mocks a string value
