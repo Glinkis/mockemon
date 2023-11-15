@@ -24,28 +24,29 @@ export function configureMockBuilder<TFaker>(config: MockBuilderInitialConfig<TF
   };
 
   function createMockBuilder<TValue>(build: DefaultBuilder<TValue>): MockBuilder<TValue> {
-    return function buildMock<TOverrides extends Partial<TValue>>(overrides?: OverrideBuilder<TOverrides>) {
-      const initial = build(config.faker);
+    return function buildMock<TOverrides extends Partial<TValue>>(override?: OverrideBuilder<TOverrides>) {
+      const original = build(config.faker);
 
-      const overridden = (() => {
-        if (typeof overrides === "function") {
-          return overrides(config.faker);
+      // Unwrap the override if it's a function.
+      if (typeof override === "function") {
+        override = override(config.faker);
+      }
+
+      // If both the original and the override are objects, we merge them.
+      if (typeof original === "object" && original !== null) {
+        if (typeof override === "object" && override !== null) {
+          return Object.assign(original, override);
         }
-        return overrides;
-      })();
-
-      const isInitialAnObject = typeof initial === "object" && initial !== null;
-      const isOverriddenAnObject = typeof overridden === "object" && overridden !== null;
-
-      if (isInitialAnObject && isOverriddenAnObject) {
-        return Object.assign(initial, overridden);
       }
 
+      // To support passing undefined as an override,
+      // we can check if the override is passed as as argument,
+      // instead of looking at the type.
       if (arguments.length) {
-        return overridden;
+        return override;
       }
 
-      return initial;
+      return original;
     };
   }
 
