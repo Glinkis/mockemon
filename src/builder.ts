@@ -14,16 +14,16 @@ type Overrideable<TValue> = {
 };
 
 export function configureMockBuilder<TFaker>(config: MockBuilderInitialConfig<TFaker>) {
-  type DefaultBuilder<TValue> = (faker: TFaker) => TValue;
+  type Build<TValue> = (faker: TFaker) => TValue;
 
-  type OverrideBuilder<TOverrides> = TOverrides | ((faker: TFaker) => TOverrides);
+  type Override<TOverrides> = Build<TOverrides> | TOverrides;
 
-  function createMockBuilder<TValue>(build: DefaultBuilder<TValue>) {
+  function createMockBuilder<TValue>(build: Build<TValue>) {
     function buildMock(): TValue;
 
-    function buildMock<TOverrides extends Overrideable<TValue>>(override: OverrideBuilder<TOverrides>): TValue;
+    function buildMock<TOverrides extends Overrideable<TValue>>(override: Override<TOverrides>): TValue;
 
-    function buildMock<TOverrides extends Overrideable<TValue>>(override?: OverrideBuilder<TOverrides>) {
+    function buildMock<TOverrides extends Overrideable<TValue>>(override?: Override<TOverrides>) {
       const original = build(config.faker);
 
       // Unwrap the override if it's a function.
