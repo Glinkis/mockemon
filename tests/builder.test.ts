@@ -84,4 +84,24 @@ describe("builder", () => {
 
     expect(buildMock(() => undefined)).toEqual(undefined);
   });
+
+  it("should allow mocking arrays", () => {
+    const buildMock = createMockBuilder((f) => f.helpers.arrayElements([1, 2, 3]));
+
+    const mocked = buildMock();
+
+    expect(mocked).toEqual(mocked);
+  });
+
+  it("should allow overriding array mocks", () => {
+    const buildMock = createMockBuilder<number[]>((f) => f.helpers.arrayElements([1, 2, 3]));
+
+    expect(buildMock([4, 5, 6])).toEqual([4, 5, 6]);
+  });
+
+  it("should allow overriding array mocks with a function", () => {
+    const buildMock = createMockBuilder<number[]>((f) => f.helpers.arrayElements([1, 2, 3]));
+
+    expect(buildMock(() => [4, 5, 6])).toEqual([4, 5, 6]);
+  });
 });
