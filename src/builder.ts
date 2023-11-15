@@ -21,7 +21,7 @@ export function configureMockBuilder<TConfig extends Configuration>(config: TCon
   function createMockBuilder<TValue>(build: Build<TValue>) {
     function buildMock(): TValue;
 
-    function buildMock<TOverrides extends Overrideable<TValue>>(override: Override<TOverrides>): TValue;
+    function buildMock<TOverrides extends Overrideable<TValue>>(override: Override<TOverrides>): TValue & TOverrides;
 
     function buildMock<TOverrides extends Overrideable<TValue>>(override?: Override<TOverrides>) {
       const original = build(config.faker);
