@@ -13,9 +13,13 @@ type DefaultBuilder<TFaker, TValue> = (faker: TFaker) => TValue;
 
 type OverrideBuilder<TFaker, TOverrides> = TOverrides | ((faker: TFaker) => TOverrides);
 
+type Overrideable<TValue> = {
+  readonly [P in keyof TValue]?: TValue[P];
+};
+
 type MockBuilder<TFaker, TValue> = {
   (): TValue;
-  <TOverrides extends Readonly<Partial<TValue>>>(overrides: OverrideBuilder<TFaker, TOverrides>): TValue & TOverrides;
+  <TOverrides extends Overrideable<TValue>>(overrides: OverrideBuilder<TFaker, TOverrides>): TValue & TOverrides;
 };
 
 export function configureMockBuilder<TFaker>(config: MockBuilderInitialConfig<TFaker>) {
