@@ -25,39 +25,27 @@ export function configureMockBuilder<TFaker>(config: MockBuilderInitialConfig<TF
 
   function createMockBuilder<TValue>(build: DefaultBuilder<TValue>): MockBuilder<TValue> {
     return function buildMock<TOverrides extends Partial<TValue>>(overrides?: OverrideBuilder<TOverrides>) {
-      const defaultMock = build(config.faker);
+      const initial = build(config.faker);
 
-      if (typeof defaultMock === "object" && defaultMock !== null) {
+      const overridden = (() => {
         if (typeof overrides === "function") {
-          const result = overrides(config.faker);
-
-          if (typeof result === "object" && result !== null) {
-            return Object.assign(defaultMock, result);
-          }
-
-          return result;
+          return overrides(config.faker);
         }
-
-        if (arguments.length > 0) {
-          if (typeof overrides === "object" && overrides !== null) {
-            return Object.assign(defaultMock, overrides);
-          }
-
-          return overrides;
-        }
-
-        return defaultMock;
-      }
-
-      if (typeof overrides === "function") {
-        return overrides(config.faker);
-      }
-
-      if (arguments.length > 0) {
         return overrides;
+      })();
+
+      const isInitialAnObject = typeof initial === "object" && initial !== null;
+      const isOverriddenAnObject = typeof overridden === "object" && overridden !== null;
+
+      if (isInitialAnObject && isOverriddenAnObject) {
+        return Object.assign(initial, overridden);
       }
 
-      return defaultMock;
+      if (arguments.length) {
+        return overridden;
+      }
+
+      return initial;
     };
   }
 
