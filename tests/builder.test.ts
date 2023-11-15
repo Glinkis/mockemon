@@ -1,6 +1,5 @@
 import { describe, expect, it } from "bun:test";
 import { configureMockBuilder } from "../src/builder.js";
-import { faker } from "@faker-js/faker";
 
 interface PetOwner {
   name: string;
@@ -178,8 +177,8 @@ describe("mixing types", () => {
       pet: f.pet(),
     }));
 
-    expect(buildMock(null)).toEqual(null);
-    expect(buildMock(() => null)).toEqual(null);
+    expect(buildMock(null)).toBeNull();
+    expect(buildMock(() => null)).toBeNull();
   });
 
   it("allows overriding an object with undefined", () => {
@@ -188,7 +187,7 @@ describe("mixing types", () => {
       pet: f.pet(),
     }));
 
-    expect(buildMock(undefined)).toEqual(undefined);
-    expect(buildMock(() => undefined)).toEqual(undefined);
+    expect(buildMock(undefined)).toBeUndefined();
+    expect(buildMock(() => undefined)).toBeUndefined();
   });
 });
