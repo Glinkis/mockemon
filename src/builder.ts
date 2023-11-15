@@ -1,20 +1,20 @@
 /**
  * A configuration object that is passed to the `configureMockBuilder` function.
  */
-interface MockBuilderInitialConfig<TFaker> {
+interface Configuration {
   /**
    * A value that will be passed to the default builder function.
    * This is usually a faker instance.
    */
-  readonly faker: TFaker;
+  readonly faker: unknown;
 }
 
 type Overrideable<TValue> = {
   readonly [P in keyof TValue]?: TValue[P];
 };
 
-export function configureMockBuilder<TFaker>(config: MockBuilderInitialConfig<TFaker>) {
-  type Build<TValue> = (faker: TFaker) => TValue;
+export function configureMockBuilder<TConfig extends Configuration>(config: TConfig) {
+  type Build<TValue> = (faker: TConfig["faker"]) => TValue;
 
   type Override<TOverrides> = Build<TOverrides> | TOverrides;
 
