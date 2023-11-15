@@ -6,7 +6,7 @@ interface PetOwner {
   pet: string;
 }
 
-const { createMockBuilder } = configureMockBuilder({
+const createMockBuilder = configureMockBuilder({
   faker: {
     name: () => "Gustavo",
     pet: () => "Dog",
@@ -184,4 +184,20 @@ describe("mixing types", () => {
     expect(buildMock(undefined)).toBeUndefined();
     expect(buildMock(() => undefined)).toBeUndefined();
   });
+});
+
+it("infers deep array overrides as tuples", () => {
+  const buildMock = createMockBuilder((f) => ({
+    deep: {
+      array: f.numbers() as unknown[],
+    },
+  }));
+
+  const mocked = buildMock({
+    deep: {
+      array: [{ a: 0 }, 2, 3],
+    },
+  });
+
+  const x = mocked.deep.array[0];
 });

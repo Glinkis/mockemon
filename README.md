@@ -42,7 +42,7 @@ To use the builder, you must first configure it. This is done by importing and c
 import { configureMockBuilder } from "mockemon/builder";
 import { faker } from "@faker-js/faker";
 
-const { createMockBuilder } = configureMockBuilder({
+const createMockBuilder = configureMockBuilder({
   // A value that will be passed as the argument to all mock builders.
   // This is often a faker instance, but can be anything.
   faker: faker,

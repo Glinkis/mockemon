@@ -51,5 +51,5 @@ export function configureMockBuilder<TConfig extends Configuration>(config: TCon
     return buildMock;
   }
 
-  return { createMockBuilder };
+  return createMockBuilder;
 }
