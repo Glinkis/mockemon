@@ -1,7 +1,5 @@
 [test]
 
-# preload = "./tests/setup.ts"
-
 coverage = true
 
 coverageThreshold = 1.0

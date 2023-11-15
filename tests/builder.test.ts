@@ -104,4 +104,17 @@ describe("builder", () => {
 
     expect(buildMock(() => [4, 5, 6])).toEqual([4, 5, 6]);
   });
+
+  it("allows mocking nested objects", () => {
+    const buildMock = createMockBuilder((f) => ({
+      name: f.person.fullName(),
+      pet: {
+        name: f.animal.dog(),
+      },
+    }));
+
+    const mocked = buildMock();
+
+    expect(mocked).toEqual(mocked);
+  });
 });
