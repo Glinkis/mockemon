@@ -26,9 +26,9 @@ describe("primitives", () => {
 
     expect(buildMock("Parrot")).toEqual("Parrot");
 
-    expect(buildMock(null)).toEqual(null);
+    expect(buildMock(null)).toBeNull();
 
-    expect(buildMock(undefined)).toEqual(undefined);
+    expect(buildMock(undefined)).toBeUndefined();
   });
 
   it("allows overriding primitive value mocks with a function", () => {
@@ -36,9 +36,9 @@ describe("primitives", () => {
 
     expect(buildMock(() => "Parrot")).toEqual("Parrot");
 
-    expect(buildMock(() => null)).toEqual(null);
+    expect(buildMock(() => null)).toBeNull();
 
-    expect(buildMock(() => undefined)).toEqual(undefined);
+    expect(buildMock(() => undefined)).toBeUndefined();
   });
 });
 
