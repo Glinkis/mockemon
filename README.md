@@ -1,25 +1,41 @@
-# mockemon
+<div align="center">
+  <h1>Mockemon</h1>
+  <p>A tiny agnostic mocking utility library, with a strong focus on type safety.</ö>
+  <br />
+  <hr/>
+</div>
 
-## A mocking utility library
+[version-badge]: https://img.shields.io/npm/v/mockemon.svg?style=flat-square
+[downloads-badge]: https://img.shields.io/npm/dm/mockemon.svg?style=flat-square
+[package]: https://www.npmjs.com/package/mockemon
+[npmtrends]: http://www.npmtrends.com/mockemon
 
 [![version][version-badge]][package]
 [![downloads][downloads-badge]][npmtrends]
 
-### Installation
+## Installation
+
+Install with your favorite package manager.
 
 ```sh
 npm install mockemon
-# or
+```
+
+```sh
 yarn add mockemon
-# or
-pnpm add mockemon
-# or
+```
+
+```sh
 bun add mockemon
 ```
 
-### The Mock Builder
+## The Mock Builder
 
-The mock builder is a utility that allows you to create strongly typed mocks for your tests.
+The mock builder utility allows you to create strongly typed mocks for your tests, or anywhere else.
+
+### Configuration
+
+To use the mock builder, you must first configure it. This is done by importing and calling `configureMockBuilder`
 
 ```ts
 import { configureMockBuilder } from "mockemon/builder";
@@ -27,24 +43,30 @@ import { faker } from "@faker-js/faker";
 
 const { createMockBuilder } = configureMockBuilder({
   // A value that will be passed as the argument to all mock builders.
-  // This is usually a faker instance, but can be anything.
+  // This is often a faker instance, but can be anything.
   faker: faker,
 });
+```
 
-// Create a basic mock builder.
-const mockBuilder = createMockBuilder((f) => ({
+### Usage
+
+Once the mock builder is configured, you can start creating mock builders.
+
+```ts
+const buildPetOwner = createMockBuilder((f) => ({
   name: f.person.firstName(),
   pet: f.animal.cat(),
 }));
 ```
 
-The mock builder will infer the type of the return value from the
-return value of the function passed to it.
+The mock builder will automatically infer the type from the provided mock builder function.
 
 ```ts
-const mock1 = mockBuilder();
+const petOwner = buildPetOwner();
 // { name: string, pet: string }
 ```
+
+### Overrides
 
 Passing a value to the mock builder will override the default value.
 
@@ -55,30 +77,37 @@ const mock2 = mockBuilder({
 // { name: string, pet: "Daisy" }
 ```
 
-You can also pass a function, which will be called with the provided "faker" instance.
+It's also possible to pass a function to the mock builder. This function will be called with the provided faker instance, just like when setting up the builder initially.
 
 ```ts
 const mock3 = mockBuilder((f) => ({
-  name: f.helpers.arrayElement(["John", "Jane"] as const),
+  pet: f.helpes.arrayElement(["Daisy", "Bella", "Luna"] as const]),
 }));
-// { name: "John" | "Jane", pet: string }
+// { name: string, pet: "Daisy" | "Bella" | "Luna" }
 ```
 
-#### Primitive Values
+### Mocking Other Types
 
-You can also create builders for primitive values.
+The mock builder can also be used to mock other types of values as well, shich as primitives or arrays.
 
 ```ts
-const mockBuilder = createMockBuilder((f) => f.helpers.random.number());
+// Mocks a string value
+const buildName = mockBuilder((f) => f.person.fullName);
 
-const mock1 = mockBuilder();
-// number
-
-const mock2 = mockBuilder(5);
-// 5
+const name1 = buildName();
+const name2 = buildName("John Doe");
+const name3 = buildName((f) => f.person.lastName());
 ```
 
-[version-badge]: https://img.shields.io/npm/v/mockemon.svg?style=flat-square
-[downloads-badge]: https://img.shields.io/npm/dm/mockemon.svg?style=flat-square
-[package]: https://www.npmjs.com/package/mockemon
-[npmtrends]: http://www.npmtrends.com/mockemon
+```ts
+// Mocks an array
+const buildNames = mockBuilder((f) => {
+  return f.helpers.multiple(() => f.person.fullName());
+});
+
+const names1 = buildNames();
+const names2 = buildNames(["John Doe", "Jane Doe"]);
+const names3 = buildNames((f) => {
+  return f.helpers.multiple(() => f.person.lastName());
+});
+```
