@@ -112,3 +112,48 @@ const names3 = buildNames((f) => {
   return f.helpers.multiple(() => f.person.lastName());
 });
 ```
+
+### Advanced Patterns
+
+#### Combining Builders
+
+If you have a value that that is a superset of another, you can reuse the builder of the subset in the builder of the superset by simply spreading it. Since the builder is a function, the values will still be generated at the time of the call.
+
+```ts
+interface Person {
+  name: string;
+  age: number;
+}
+
+const buildPerson = createMockBuilder(
+  (f): Person => ({
+    name: f.person.firstName(),
+    age: f.random.number(),
+  }),
+);
+
+interface PetOwner extends Person {
+  pet: string;
+}
+
+const buildPetOwner = createMockBuilder(buildPerson
+  (f): PetOwner => ({
+    ...buildPerson(),
+    pet: f.animal.cat(),
+  }),
+);
+```
+
+```ts
+const buildCatNames = createMockBuilder((f) => {
+  return f.helpers.shuffle(["Daisy", "Bella", "Luna"]);
+});
+
+const buildDogNames = createMockBuilder((f) => {
+  return f.helpers.shuffle(["Max", "Charlie", "Cooper"]);
+});
+
+const buildPets = createMockBuilder((f) => {
+  return f.helpers.shuffle([...buildCatNames(), ...buildDogNames()]);
+});
+```
