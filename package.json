@@ -1,12 +1,23 @@
 {
   "name": "mockemon",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "repository": "https://github.com/Glinkis/mockemon.git",
   "author": "Victor Glindås <glinkis@gmail.com>",
   "license": "MIT",
   "type": "module",
+  "main": "./dist/index.cjs",
+  "types": "./dist/index.d.cts",
   "exports": {
-    ".": null,
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "require": "./dist/builder.cjs"
+      }
+    },
     "./builder": {
       "import": {
         "types": "./dist/builder.d.ts",
