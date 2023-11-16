@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.0.3
+
+- Disabled bundling in build.
+
 ## v2.0.2
 
 - Updated package exports to include more import options.
