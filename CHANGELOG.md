@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.0.1
+
+- Updated package exports to include more import options.
+
 ## v2.0.0
 
 ### Breaking
