@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.0.2
+
+- Updated package exports to include more import options.
+- Export `configureMockBuilder` from from root.
+- Updated readme to include more examples.
+
 ## v2.0.1
 
 - Updated package exports to include more import options.
