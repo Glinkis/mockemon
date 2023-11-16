@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.0.0
+
+- Renamed the `faker` option to `context`, as it can be any value.
+
 ## v2.0.3
 
 - Disabled bundling in build.

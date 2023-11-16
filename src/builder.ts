@@ -6,7 +6,7 @@ interface Configuration {
    * A value that will be passed to the default builder function.
    * This is usually a faker instance.
    */
-  readonly faker: unknown;
+  readonly context: unknown;
 }
 
 type Overrideable<TValue> = {
@@ -14,7 +14,7 @@ type Overrideable<TValue> = {
 };
 
 export function configureMockBuilder<TConfig extends Configuration>(config: TConfig) {
-  type Build<TValue> = (faker: TConfig["faker"]) => TValue;
+  type Build<TValue> = (faker: TConfig["context"]) => TValue;
 
   type Override<TOverrides> = Build<TOverrides> | TOverrides;
 
@@ -24,11 +24,11 @@ export function configureMockBuilder<TConfig extends Configuration>(config: TCon
     function buildMock<TOverrides extends Overrideable<TValue>>(override: Override<TOverrides>): TValue & TOverrides;
 
     function buildMock<TOverrides extends Overrideable<TValue>>(override?: Override<TOverrides>) {
-      const original = build(config.faker);
+      const original = build(config.context);
 
       // Unwrap the override if it's a function.
       if (typeof override === "function") {
-        override = override(config.faker);
+        override = override(config.context);
       }
 
       // If both the original and the override are objects, we merge them.

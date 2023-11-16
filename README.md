@@ -45,7 +45,7 @@ import { faker } from "@faker-js/faker";
 const createMockBuilder = configureMockBuilder({
   // A value that will be passed as the argument to all mock builders.
   // This is often a faker instance, but can be anything.
-  faker: faker,
+  context: faker,
 });
 ```
 

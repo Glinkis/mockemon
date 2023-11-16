@@ -1,4 +1,4 @@
-import { describe, expect, it } from "bun:test";
+import { expect, it } from "bun:test";
 import { configureMockBuilder } from "../src/builder.js";
 
 interface PetOwner {
@@ -7,7 +7,7 @@ interface PetOwner {
 }
 
 const createMockBuilder = configureMockBuilder({
-  faker: {
+  context: {
     name: () => "Gustavo",
     pet: () => "Dog",
     numbers: () => [1, 2, 3],
