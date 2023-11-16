@@ -72,7 +72,7 @@ const petOwner = buildPetOwner();
 Passing a value to the builder will override the default value.
 
 ```ts
-const mock2 = mockBuilder({
+const petOwner = buildPetOwner({
   pet: "Daisy" as const,
 });
 // { name: string, pet: "Daisy" }
@@ -81,7 +81,7 @@ const mock2 = mockBuilder({
 It's also possible to pass a function to the builder. This function will be called with the provided faker instance, just like when setting up the builder initially.
 
 ```ts
-const mock3 = mockBuilder((f) => ({
+const petOwner = buildPetOwner((f) => ({
   pet: f.helpes.arrayElement(["Daisy", "Bella", "Luna"] as const]),
 }));
 // { name: string, pet: "Daisy" | "Bella" | "Luna" }
@@ -93,7 +93,7 @@ The builder can also be used to mock other types of values as well, shich as pri
 
 ```ts
 // Mocks a string value
-const buildName = mockBuilder((f) => f.person.fullName);
+const buildName = createMockBuilder((f) => f.person.fullName);
 
 const name1 = buildName();
 const name2 = buildName("John Doe");
@@ -102,7 +102,7 @@ const name3 = buildName((f) => f.person.lastName());
 
 ```ts
 // Mocks an array
-const buildNames = mockBuilder((f) => {
+const buildNames = createMockBuilder((f) => {
   return f.helpers.multiple(() => f.person.fullName());
 });
 
