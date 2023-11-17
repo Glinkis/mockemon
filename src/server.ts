@@ -1,45 +1,39 @@
-interface Configuration<TRequest> {
+interface Configuration {
   /**
    * Should return a serializable structure that uniquely identifies a request.
    */
-  getStorageKey: (request: TRequest) => unknown;
+  readonly resolve: (request: any) => {
+    key: string;
+    value: any;
+  };
 }
 
-export function configureMockServer<TRequest, TMock>(config: Configuration<TRequest>) {
+export function configureMockServer<TConfig extends Configuration>(config: TConfig) {
   return {
     /**
      * Stores the mocks that are registered for each request.
      */
-    mocks: createStore<TRequest, TMock>(config),
-    /**
-     * Stores the history of requests that were made to the server.
-     */
-    requests: createStore<TRequest, TRequest>(config),
+    mocks: createStore(config),
   };
 }
 
-function createStore<TRequest, TValue>(config: Configuration<TRequest>) {
-  const store = new Map<string, TValue>();
+function createStore<TConfig extends Configuration>(config: TConfig) {
+  type Request = Parameters<(typeof config)["resolve"]>[0];
+  type Value = ReturnType<(typeof config)["resolve"]>["value"];
 
-  function getKey(request: TRequest) {
-    return JSON.stringify(config.getStorageKey(request));
-  }
+  const store = new Map<string, Value>();
 
   return {
-    set(request: TRequest, value: TValue) {
-      store.set(getKey(request), value);
+    set(request: Request) {
+      const resolved = config.resolve(request);
+      store.set(resolved.key, resolved.value);
     },
-    get(request: TRequest) {
-      return store.get(getKey(request));
+    get(request: Omit<Request, "value">) {
+      const resolved = config.resolve(request);
+      return store.get(resolved.key);
     },
     getAll() {
-      const entries: Record<string, TValue> = {};
-
-      for (const [key, value] of store.entries()) {
-        entries[JSON.parse(key)] = value;
-      }
-
-      return entries;
+      return Object.fromEntries(store);
     },
   };
 }

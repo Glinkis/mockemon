@@ -2,39 +2,89 @@ import { expect, it } from "bun:test";
 import { configureMockServer } from "../src/server";
 import express from "express";
 
+interface RequestMock {
+  url: string;
+  method: string;
+  body: unknown;
+}
+
+const config = configureMockServer({
+  resolve: (request: RequestMock) => ({
+    key: JSON.stringify({
+      url: request.url,
+      method: request.method,
+    }),
+    value: request.body,
+  }),
+});
+
 it("can configure a server with express", async () => {
-  const config = configureMockServer({
-    getStorageKey: (req: express.Request) => [req.originalUrl],
-  });
+  const app = express().use(express.json());
 
-  const app = express();
-
-  app.post("/mock", express.json(), (req, res) => {
-    config.mocks.set(req, req.body);
+  app.post("/mock", (req, res) => {
+    config.mocks.set(req.body);
     res.json();
   });
 
-  app.get("/mock", (req, res) => {
-    res.json(config.mocks.get(req));
+  app.get("/mock/:request", (req, res) => {
+    const mock = config.mocks.get(req.body);
+    res.json(mock);
   });
 
   app.get("/mocks", (_, res) => {
     res.json(config.mocks.getAll());
   });
 
-  app.listen(3000);
+  app.listen(4000);
 
-  await fetch("http://localhost:3000/mock", {
+  const mock1: RequestMock = {
+    url: "/some/url",
+    method: "POST",
+    body: {
+      foo: "foo",
+    },
+  };
+
+  await fetch("http://localhost:4000/mock", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ foo: "bar" }),
+    body: JSON.stringify(mock1),
   });
 
-  const mock = await fetch("http://localhost:3000/mock").then((res) => res.json());
+  await fetch("http://localhost:4000/mock/" + encodeURIComponent(JSON.stringify(mock1)), {
+    headers: { "Content-Type": "application/json" },
+  });
 
-  expect(mock).toEqual({ foo: "bar" });
+  const mocks = await fetch("http://localhost:4000/mocks").then((res) => res.json());
 
-  const mocks = await fetch("http://localhost:3000/mocks").then((res) => res.json());
+  expect(mocks).toStrictEqual({
+    '{"url":"/some/url","method":"POST"}': {
+      foo: "foo",
+    },
+  });
 
-  expect(mocks).toEqual({ "/mock": { foo: "bar" } });
+  const mock2: RequestMock = {
+    url: "/some/other/url",
+    method: "POST",
+    body: {
+      bar: "bar",
+    },
+  };
+
+  await fetch("http://localhost:4000/mock", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(mock2),
+  });
+
+  const mocks2 = await fetch("http://localhost:4000/mocks");
+
+  expect(await mocks2.json()).toStrictEqual({
+    '{"url":"/some/url","method":"POST"}': {
+      foo: "foo",
+    },
+    '{"url":"/some/other/url","method":"POST"}': {
+      bar: "bar",
+    },
+  });
 });
