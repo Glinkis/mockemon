@@ -6,32 +6,40 @@ interface Configuration<TRequest> {
 }
 
 export function configureMockServer<TRequest, TMock>(config: Configuration<TRequest>) {
-  /**
-   * Stores the mocks that are registered for each request.
-   */
-  const mockStore = new Map<string, TMock>();
-
   return {
-    mocks: {
-      set(request: TRequest, mock: TMock) {
-        mockStore.set(getKey(request), mock);
-      },
-      get(request: TRequest) {
-        return mockStore.get(getKey(request));
-      },
-      getAll() {
-        const entries: Record<string, TMock> = {};
-
-        for (const [key, value] of mockStore.entries()) {
-          entries[JSON.parse(key)] = value;
-        }
-
-        return entries;
-      },
-    },
+    /**
+     * Stores the mocks that are registered for each request.
+     */
+    mocks: createStore<TRequest, TMock>(config),
+    /**
+     * Stores the history of requests that were made to the server.
+     */
+    requests: createStore<TRequest, TRequest>(config),
   };
+}
+
+function createStore<TRequest, TValue>(config: Configuration<TRequest>) {
+  const store = new Map<string, TValue>();
 
   function getKey(request: TRequest) {
     return JSON.stringify(config.getStorageKey(request));
   }
+
+  return {
+    set(request: TRequest, value: TValue) {
+      store.set(getKey(request), value);
+    },
+    get(request: TRequest) {
+      return store.get(getKey(request));
+    },
+    getAll() {
+      const entries: Record<string, TValue> = {};
+
+      for (const [key, value] of store.entries()) {
+        entries[JSON.parse(key)] = value;
+      }
+
+      return entries;
+    },
+  };
 }
