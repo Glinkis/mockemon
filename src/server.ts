@@ -69,6 +69,14 @@ function createMockStore<TConfig extends Configuration>(config: TConfig) {
      * Client for interacting with the mock server.
      */
     client(clientConfig: ClientConfiguration) {
+      const headers: HeadersInit = {
+        "Content-Type": "application/json",
+      };
+
+      function unwrap(response: Response) {
+        return response.json();
+      }
+
       return {
         /**
          * Registers a mock for a request.
@@ -76,10 +84,8 @@ function createMockStore<TConfig extends Configuration>(config: TConfig) {
         set(request: Request) {
           return fetch(clientConfig.address + setUrl + encodeURIComponent(JSON.stringify(request)), {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }).then((response) => response.json());
+            headers,
+          }).then(unwrap);
         },
 
         /**
@@ -88,10 +94,8 @@ function createMockStore<TConfig extends Configuration>(config: TConfig) {
         get(request: Request) {
           return fetch(clientConfig.address + getUrl + encodeURIComponent(JSON.stringify(request)), {
             method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }).then((response) => response.json());
+            headers,
+          }).then(unwrap);
         },
 
         /**
@@ -100,10 +104,8 @@ function createMockStore<TConfig extends Configuration>(config: TConfig) {
         getAll() {
           return fetch(clientConfig.address + getAllUrl, {
             method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }).then((response) => response.json());
+            headers,
+          }).then(unwrap);
         },
       };
     },
