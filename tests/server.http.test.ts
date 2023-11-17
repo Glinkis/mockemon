@@ -9,7 +9,6 @@ interface RequestMock {
 }
 
 const config = configureMockServer({
-  address: "http://localhost:4001",
   resolve: (request: RequestMock) => ({
     key: JSON.stringify({
       url: request.url,
@@ -34,7 +33,9 @@ function createNodeHttpMockServer() {
 it("can configure a server with http", async () => {
   createNodeHttpMockServer();
 
-  const client = config.mocks.client();
+  const client = config.mocks.client({
+    address: "http://localhost:4001",
+  });
 
   const mock1: RequestMock = {
     url: "/some/url",

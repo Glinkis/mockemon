@@ -9,7 +9,6 @@ interface RequestMock {
 }
 
 const config = configureMockServer({
-  address: "http://localhost:4000",
   resolve: (request: RequestMock) => ({
     key: JSON.stringify({
       url: request.url,
@@ -32,7 +31,9 @@ function createExpressMockServer() {
 it("can configure a server with express", async () => {
   createExpressMockServer();
 
-  const client = config.mocks.client();
+  const client = config.mocks.client({
+    address: "http://localhost:4000",
+  });
 
   const mock1: RequestMock = {
     url: "/some/url",

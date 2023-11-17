@@ -1,6 +1,4 @@
 interface Configuration {
-  readonly address?: string;
-
   /**
    * Should return a serializable structure that uniquely identifies a request.
    */
@@ -8,6 +6,13 @@ interface Configuration {
     key: string;
     value: any;
   };
+}
+
+interface ClientConfiguration {
+  /**
+   * The address of the server.
+   */
+  readonly address: string;
 }
 
 export function configureMockServer<TConfig extends Configuration>(config: TConfig) {
@@ -63,13 +68,13 @@ function createMockStore<TConfig extends Configuration>(config: TConfig) {
     /**
      * Client for interacting with the mock server.
      */
-    client() {
+    client(clientConfig: ClientConfiguration) {
       return {
         /**
          * Registers a mock for a request.
          */
         set(request: Request) {
-          return fetch(config.address + setUrl + encodeURIComponent(JSON.stringify(request)), {
+          return fetch(clientConfig.address + setUrl + encodeURIComponent(JSON.stringify(request)), {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -81,7 +86,7 @@ function createMockStore<TConfig extends Configuration>(config: TConfig) {
          * Returns the mock for a request.
          */
         get(request: Request) {
-          return fetch(config.address + getUrl + encodeURIComponent(JSON.stringify(request)), {
+          return fetch(clientConfig.address + getUrl + encodeURIComponent(JSON.stringify(request)), {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -93,7 +98,7 @@ function createMockStore<TConfig extends Configuration>(config: TConfig) {
          * Returns all mocks.
          */
         getAll() {
-          return fetch(config.address + getAllUrl, {
+          return fetch(clientConfig.address + getAllUrl, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
