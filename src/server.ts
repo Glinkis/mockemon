@@ -16,15 +16,6 @@ interface ClientConfiguration {
 }
 
 export function configureMockServer<TConfig extends Configuration>(config: TConfig) {
-  return {
-    /**
-     * Stores the mocks that are registered for each request.
-     */
-    mocks: createMockStore(config),
-  };
-}
-
-function createMockStore<TConfig extends Configuration>(config: TConfig) {
   type Request = Parameters<(typeof config)["resolve"]>[0];
   type Value = ReturnType<(typeof config)["resolve"]>["value"];
 

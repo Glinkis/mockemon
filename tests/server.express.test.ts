@@ -19,7 +19,7 @@ const config = configureMockServer({
 });
 
 function createExpressMockServer() {
-  const mockServer = config.mocks.server();
+  const mockServer = config.server();
 
   express()
     .all(mockServer.url + "*", (req, res) => {
@@ -31,7 +31,7 @@ function createExpressMockServer() {
 it("can configure a server with express", async () => {
   createExpressMockServer();
 
-  const client = config.mocks.client({
+  const client = config.client({
     address: "http://localhost:4000",
   });
 

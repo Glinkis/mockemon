@@ -19,7 +19,7 @@ const config = configureMockServer({
 });
 
 function createNodeHttpMockServer() {
-  const mockServer = config.mocks.server();
+  const mockServer = config.server();
 
   http
     .createServer((req, res) => {
@@ -33,7 +33,7 @@ function createNodeHttpMockServer() {
 it("can configure a server with http", async () => {
   createNodeHttpMockServer();
 
-  const client = config.mocks.client({
+  const client = config.client({
     address: "http://localhost:4001",
   });
 
