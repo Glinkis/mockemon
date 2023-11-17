@@ -24,16 +24,16 @@ function createNodeHttpMockServer() {
 
   http
     .createServer((req, res) => {
-      if (typeof req.url === "undefined") {
-        throw new Error("req.url is undefined");
+      if (req.url?.startsWith(mockServer.url)) {
+        res.end(JSON.stringify(mockServer.resolve(req.url)));
       }
-      res.end(mockServer.resolve(req.url));
     })
     .listen(4001);
 }
 
-it.skip("can configure a server with http", async () => {
+it("can configure a server with http", async () => {
   createNodeHttpMockServer();
+
   const client = config.mocks.client();
 
   const mock1: RequestMock = {
@@ -44,7 +44,7 @@ it.skip("can configure a server with http", async () => {
     },
   };
 
-  await client.set(mock1);
+  console.log(await client.set(mock1));
 
   expect(await client.get(mock1)).toStrictEqual({
     foo: "foo",

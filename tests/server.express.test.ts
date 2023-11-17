@@ -33,6 +33,7 @@ it("can configure a server with express", async () => {
   createExpressMockServer();
 
   const client = config.mocks.client();
+
   const mock1: RequestMock = {
     url: "/some/url",
     method: "POST",

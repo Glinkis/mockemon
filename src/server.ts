@@ -23,7 +23,7 @@ function createMockStore<TConfig extends Configuration>(config: TConfig) {
   type Request = Parameters<(typeof config)["resolve"]>[0];
   type Value = ReturnType<(typeof config)["resolve"]>["value"];
 
-  const rootUrl = "/mocks";
+  const rootUrl = "/mocks/";
   const setUrl = rootUrl + "set/";
   const getUrl = rootUrl + "get/";
   const getAllUrl = rootUrl + "get-all";
@@ -43,6 +43,7 @@ function createMockStore<TConfig extends Configuration>(config: TConfig) {
             const decoded = JSON.parse(decodeURIComponent(parsed));
             const resolved = config.resolve(decoded);
             store.set(resolved.key, resolved.value);
+            return;
           }
 
           if (url.startsWith(getUrl)) {
