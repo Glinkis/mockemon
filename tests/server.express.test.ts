@@ -1,6 +1,6 @@
+import express from "express";
 import { expect, it } from "bun:test";
 import { configureMockServer } from "../src/server";
-import express from "express";
 
 interface RequestMock {
   url: string;

@@ -1,5 +1,5 @@
-import { expect, it } from "bun:test";
 import http from "node:http";
+import { expect, it } from "bun:test";
 import { configureMockServer } from "../src/server";
 
 interface RequestMock {
