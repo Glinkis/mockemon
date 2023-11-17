@@ -22,30 +22,17 @@ const config = configureMockServer({
 function createExpressMockServer() {
   const mockServer = config.mocks.server();
 
-  const app = express().use(express.json());
-
-  app.post("/mock/:request", (req, res) => {
-    mockServer.set(req.params.request);
-    res.json();
-  });
-
-  app.get("/mock/:request", (req, res) => {
-    const mock = mockServer.get(req.params.request);
-    res.json(mock);
-  });
-
-  app.get("/mocks", (_, res) => {
-    res.json(mockServer.getAll());
-  });
-
-  app.listen(4000);
+  express()
+    .all(mockServer.url + "*", (req, res) => {
+      res.json(mockServer.resolve(req.originalUrl));
+    })
+    .listen(4000);
 }
 
 it("can configure a server with express", async () => {
   createExpressMockServer();
 
   const client = config.mocks.client();
-
   const mock1: RequestMock = {
     url: "/some/url",
     method: "POST",
@@ -54,7 +41,7 @@ it("can configure a server with express", async () => {
     },
   };
 
-  await client.set(mock1);
+  console.log(await client.set(mock1));
 
   expect(await client.get(mock1)).toStrictEqual({
     foo: "foo",
