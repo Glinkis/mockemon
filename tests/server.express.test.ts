@@ -43,8 +43,6 @@ it("can configure a server with express", async () => {
     },
   };
 
-  console.log(await client.set(mock1));
-
   expect(await client.get(mock1)).toStrictEqual({
     foo: "foo",
   });
