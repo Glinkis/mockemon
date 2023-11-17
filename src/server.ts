@@ -31,21 +31,23 @@ export function configureMockServer<TConfig extends Configuration>(config: TConf
     server() {
       const store = new Map<string, Value>();
 
+      function decode(url: string) {
+        return JSON.parse(decodeURIComponent(url));
+      }
+
       return {
         url: rootUrl,
         resolve(url: string) {
           if (url.startsWith(setUrl)) {
             const parsed = url.slice(setUrl.length);
-            const decoded = JSON.parse(decodeURIComponent(parsed));
-            const resolved = config.resolve(decoded);
+            const resolved = config.resolve(decode(parsed));
             store.set(resolved.key, resolved.value);
             return;
           }
 
           if (url.startsWith(getUrl)) {
             const parsed = url.slice(getUrl.length);
-            const decoded = JSON.parse(decodeURIComponent(parsed));
-            const resolved = config.resolve(decoded);
+            const resolved = config.resolve(decode(parsed));
             return store.get(resolved.key);
           }
 
@@ -68,12 +70,16 @@ export function configureMockServer<TConfig extends Configuration>(config: TConf
         return response.json();
       }
 
+      function encode(request: Request) {
+        return encodeURIComponent(JSON.stringify(request));
+      }
+
       return {
         /**
          * Registers a mock for a request.
          */
         set(request: Request) {
-          return fetch(clientConfig.address + setUrl + encodeURIComponent(JSON.stringify(request)), {
+          return fetch(clientConfig.address + setUrl + encode(request), {
             method: "POST",
             headers,
           }).then(unwrap);
@@ -83,7 +89,7 @@ export function configureMockServer<TConfig extends Configuration>(config: TConf
          * Returns the mock for a request.
          */
         get(request: Request) {
-          return fetch(clientConfig.address + getUrl + encodeURIComponent(JSON.stringify(request)), {
+          return fetch(clientConfig.address + getUrl + encode(request), {
             method: "GET",
             headers,
           }).then(unwrap);
