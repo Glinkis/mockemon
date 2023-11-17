@@ -5,39 +5,41 @@ import { configureMockServer } from "../src/server";
 interface RequestMock {
   url: string;
   method: string;
-  body: unknown;
+  body: Record<string, unknown>;
 }
 
-function createNodeHttpMockServer() {
-  const config = configureMockServer({
-    logging: true,
-    resolve: (request: RequestMock) => ({
-      key: JSON.stringify({
-        url: request.url,
-        method: request.method,
-      }),
-      value: request.body,
+const config = configureMockServer({
+  address: "http://localhost:4001",
+  resolve: (request: RequestMock) => ({
+    key: JSON.stringify({
+      url: request.url,
+      method: request.method,
     }),
-  });
+    value: request.body,
+  }),
+});
+
+function createNodeHttpMockServer() {
+  const mockServer = config.mocks.server();
 
   http
     .createServer((req, res) => {
       if (req.url!.startsWith("/mock/")) {
-        const parsed = JSON.parse(decodeURIComponent(req.url!.slice("/mock/".length)));
+        const parsed = req.url!.slice("/mock/".length);
 
         if (req.method === "POST") {
-          config.mocks.set(parsed);
+          mockServer.set(parsed);
           res.end();
         }
 
         if (req.method === "GET") {
-          const mock = config.mocks.get(parsed);
+          const mock = mockServer.get(parsed);
           res.end(JSON.stringify(mock));
         }
       }
 
       if (req.url === "/mocks" && req.method === "GET") {
-        const mocks = JSON.stringify(config.mocks.getAll());
+        const mocks = JSON.stringify(mockServer.getAll());
         res.end(mocks);
       }
 
@@ -48,6 +50,7 @@ function createNodeHttpMockServer() {
 
 it("can configure a server with http", async () => {
   createNodeHttpMockServer();
+  const client = config.mocks.client();
 
   const mock1: RequestMock = {
     url: "/some/url",
@@ -57,35 +60,21 @@ it("can configure a server with http", async () => {
     },
   };
 
-  await fetch("http://localhost:4001/mock/" + encodeURIComponent(JSON.stringify(mock1)), {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-  });
+  await client.set(mock1);
 
-  const mockRequest = await fetch("http://localhost:4001/mock/" + encodeURIComponent(JSON.stringify(mock1)), {
-    headers: { "Content-Type": "application/json" },
-  });
-
-  expect(await mockRequest.json()).toStrictEqual({
+  expect(await client.get(mock1)).toStrictEqual({
     foo: "foo",
   });
 
-  const mock2: RequestMock = {
+  await client.set({
     url: "/some/other/url",
     method: "POST",
     body: {
       bar: "bar",
     },
-  };
-
-  await fetch("http://localhost:4001/mock/" + encodeURIComponent(JSON.stringify(mock2)), {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
   });
 
-  const mocksRequest = await fetch("http://localhost:4001/mocks");
-
-  expect(await mocksRequest.json()).toStrictEqual({
+  expect(await client.getAll()).toStrictEqual({
     '{"url":"/some/url","method":"POST"}': {
       foo: "foo",
     },
