@@ -48,8 +48,9 @@ export function configureMockServer<TPayload>(config: Configuration) {
 
         /**
          * This should resolve to a key that uniquely identifies the request.
+         * @param path The path of the request, without the `realApiUrl` prefix.
          */
-        getKey: (url: string) => string;
+        getKey: (path: string) => string;
       }
 
       interface ResolveMockRequstArgs {
@@ -60,6 +61,7 @@ export function configureMockServer<TPayload>(config: Configuration) {
 
         /**
          * This should resolve to a key that uniquely identifies the request.
+         * @param payload The payload that was sent from the client.
          */
         getKey: (payload: TPayload) => string;
       }

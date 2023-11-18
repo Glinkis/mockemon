@@ -3,7 +3,7 @@ import { expect, it } from "bun:test";
 import { configureMockServer } from "../src/server";
 
 interface RequestMock {
-  url: string;
+  path: string;
   method: string;
   body: Record<string, unknown>;
 }
@@ -21,14 +21,14 @@ express()
   .all(server.realApiUrl + "*", (req, res) => {
     const result = server.getMockedValue({
       url: req.originalUrl,
-      getKey: (url) => `${req.method} ${url}`,
+      getKey: (path) => `${req.method} ${path}`,
     });
     res.json(result);
   })
   .all(server.mockApiUrl + "*", (req, res) => {
     const result = server.resolveMockRequest({
       url: req.originalUrl,
-      getKey: (payload) => `${payload.method} ${payload.url}`,
+      getKey: (payload) => `${payload.method} ${payload.path}`,
     });
     res.json(result);
   })
@@ -46,7 +46,7 @@ const client = config.client({
 
 it("can configure a server with express", async () => {
   const mock1: RequestMock = {
-    url: "/some/url",
+    path: "/some/url",
     method: "GET",
     body: {
       foo: "foo",
@@ -60,7 +60,7 @@ it("can configure a server with express", async () => {
   });
 
   await client.set({
-    url: "/some/other/url",
+    path: "/some/other/url",
     method: "POST",
     body: {
       bar: "bar",
