@@ -26,10 +26,9 @@ interface ClientConfiguration {
 }
 
 export function configureMockServer<TPayload>(config: Configuration) {
-  const rootUrl = config.mockApiUrl;
-  const setUrl = rootUrl + "set/";
-  const getUrl = rootUrl + "get/";
-  const getAllUrl = rootUrl + "get-all";
+  const setUrl = config.mockApiUrl + "set/";
+  const getUrl = config.mockApiUrl + "get/";
+  const getAllUrl = config.mockApiUrl + "get-all";
 
   return {
     mockApiUrl: config.mockApiUrl,
