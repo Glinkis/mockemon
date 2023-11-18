@@ -64,7 +64,7 @@ it("can configure a server with express", async () => {
 
   await client.set({
     url: "/some/other/url",
-    method: "GET",
+    method: "POST",
     body: {
       bar: "bar",
     },
@@ -74,19 +74,30 @@ it("can configure a server with express", async () => {
     "GET /some/url": {
       foo: "foo",
     },
-    "GET /some/other/url": {
+    "POST /some/other/url": {
       bar: "bar",
     },
   });
 
-  const mocked = await fetch("http://localhost:4000/api/some/url", {
+  const mockedGet = await fetch("http://localhost:4000/api/some/url", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
   });
 
-  expect(await mocked.json()).toStrictEqual({
+  expect(await mockedGet.json()).toStrictEqual({
     foo: "foo",
+  });
+
+  const mockedPost = await fetch("http://localhost:4000/api/some/other/url", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  expect(await mockedPost.json()).toStrictEqual({
+    bar: "bar",
   });
 });
