@@ -5,7 +5,7 @@ import { configureMockServer } from "../src/server";
 interface RequestMock {
   url: string;
   method: string;
-  body: unknown;
+  body: Record<string, unknown>;
 }
 
 const config = configureMockServer<RequestMock>({
