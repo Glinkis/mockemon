@@ -12,8 +12,8 @@ const config = configureMockServer<RequestMock>();
 
 function createExpressMockServer() {
   const mockServer = config.server({
-    getKey: (request) => `${request.method} ${request.url}`,
-    getValue: (request) => request.body,
+    getKey: (payload) => `${payload.method} ${payload.url}`,
+    getValue: (payload) => payload.body,
   });
 
   express()
