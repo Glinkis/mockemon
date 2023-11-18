@@ -39,9 +39,6 @@ const client = config.client({
   async request({ url, method }) {
     const response = await fetch(url, {
       method,
-      headers: {
-        "Content-Type": "application/json",
-      },
     });
     return response.json();
   },
@@ -81,9 +78,6 @@ it("can configure a server with express", async () => {
 
   const mockedGet = await fetch("http://localhost:4000/api/some/url", {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
   });
 
   expect(await mockedGet.json()).toStrictEqual({
@@ -92,9 +86,6 @@ it("can configure a server with express", async () => {
 
   const mockedPost = await fetch("http://localhost:4000/api/some/other/url", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
   });
 
   expect(await mockedPost.json()).toStrictEqual({
