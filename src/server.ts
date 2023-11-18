@@ -52,7 +52,7 @@ export function configureMockServer<TPayload>(config: Configuration) {
         getKey: (url: string) => string;
       }
 
-      interface ResolveMockRequstArgs<TKey> {
+      interface ResolveMockRequstArgs {
         /**
          * The full url path of the request.
          */
@@ -61,7 +61,7 @@ export function configureMockServer<TPayload>(config: Configuration) {
         /**
          * This should resolve to a key that uniquely identifies the request.
          */
-        getKey: (payload: TPayload) => TKey extends string ? TKey : never;
+        getKey: (payload: TPayload) => string;
       }
 
       return {
@@ -79,7 +79,7 @@ export function configureMockServer<TPayload>(config: Configuration) {
         /**
          * Resolves a request to the mocking API.
          */
-        resolveMockRequest<TKey>(args: ResolveMockRequstArgs<TKey>) {
+        resolveMockRequest<TKey>(args: ResolveMockRequstArgs) {
           if (args.url.startsWith(getAllUrl)) {
             return Object.fromEntries(store);
           }
