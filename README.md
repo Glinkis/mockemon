@@ -157,3 +157,27 @@ const buildPets = createMockBuilder((f) => {
   return f.helpers.shuffle([...buildCatNames(), ...buildDogNames()]);
 });
 ```
+
+## The Mock Server
+
+### Configuration
+
+To use the mock server, you must first configure it. This is done by importing and calling `configureMockServer`
+
+```ts
+import { configureMockServer } from "mockemon/server";
+
+// The payload type is used to define the shape of the data that will be sent to the server.
+type Payload = {
+  path: string;
+  method: string;
+  status: number;
+  body: unknown;
+};
+
+// Since a single server will handle both the "real" requests that we want to serve our mocks to as well as the requests that facilitates the mocking, we need to be able to distinguish between the two.
+export const { client, server } = configureMockServer<Payload>({
+  realApiUrl: "/api",
+  mockApiUrl: "/mocks",
+});
+```
