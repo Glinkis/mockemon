@@ -25,9 +25,9 @@ interface ClientConfiguration {
 }
 
 export function configureMockServer<TPayload>(config: Configuration) {
-  const setUrl = config.mockApiUrl + "set/";
-  const getUrl = config.mockApiUrl + "get/";
-  const getAllUrl = config.mockApiUrl + "get-all";
+  const setUrl = config.mockApiUrl + "/set";
+  const getUrl = config.mockApiUrl + "/get";
+  const getAllUrl = config.mockApiUrl + "/get-all";
 
   return {
     /**
@@ -52,7 +52,7 @@ export function configureMockServer<TPayload>(config: Configuration) {
         getKey: (url: string) => string;
       }
 
-      interface ResolveMockRequstArgs {
+      interface ResolveMockRequstArgs<TKey> {
         /**
          * The full url path of the request.
          */
@@ -61,7 +61,7 @@ export function configureMockServer<TPayload>(config: Configuration) {
         /**
          * This should resolve to a key that uniquely identifies the request.
          */
-        getKey: (payload: TPayload) => string;
+        getKey: (payload: TPayload) => TKey extends string ? TKey : never;
       }
 
       return {
@@ -79,11 +79,9 @@ export function configureMockServer<TPayload>(config: Configuration) {
         /**
          * Resolves a request to the mocking API.
          */
-        resolveMockRequest(args: ResolveMockRequstArgs) {
-          if (args.url.startsWith(setUrl)) {
-            const decoded = decode(args.url.slice(setUrl.length));
-            store.set(args.getKey(decoded), serverConfig.getValue(decoded));
-            return;
+        resolveMockRequest<TKey>(args: ResolveMockRequstArgs<TKey>) {
+          if (args.url.startsWith(getAllUrl)) {
+            return Object.fromEntries(store);
           }
 
           if (args.url.startsWith(getUrl)) {
@@ -91,8 +89,10 @@ export function configureMockServer<TPayload>(config: Configuration) {
             return store.get(args.getKey(decoded));
           }
 
-          if (args.url.startsWith(getAllUrl)) {
-            return Object.fromEntries(store);
+          if (args.url.startsWith(setUrl)) {
+            const decoded = decode(args.url.slice(setUrl.length));
+            store.set(args.getKey(decoded), serverConfig.getValue(decoded));
+            return;
           }
         },
       };
