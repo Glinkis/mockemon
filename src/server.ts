@@ -79,7 +79,7 @@ export function configureMockServer<TPayload>(config: Configuration) {
         /**
          * Resolves a request to the mocking API.
          */
-        resolveMockRequest<TKey>(args: ResolveMockRequstArgs) {
+        resolveMockRequest(args: ResolveMockRequstArgs) {
           if (args.url.startsWith(getAllUrl)) {
             return Object.fromEntries(store);
           }
