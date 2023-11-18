@@ -1,24 +1,16 @@
-interface Configuration {
-  /**
-   * Should return a serializable structure that uniquely identifies a request.
-   */
-  readonly resolve: (request: any) => {
-    key: string;
-    value: any;
-  };
-}
-
 interface ClientConfiguration {
   /**
    * The address of the server.
    */
-  readonly address: string;
+  address: string;
 }
 
-export function configureMockServer<TConfig extends Configuration>(config: TConfig) {
-  type Request = Parameters<(typeof config)["resolve"]>[0];
-  type Value = ReturnType<(typeof config)["resolve"]>["value"];
+interface ServerConfiguration<TPayload, TValue> {
+  getKey: (payload: TPayload) => string;
+  getValue: (payload: TPayload) => TValue;
+}
 
+export function configureMockServer<TPayload>() {
   const rootUrl = "/mocks/";
   const setUrl = rootUrl + "set/";
   const getUrl = rootUrl + "get/";
@@ -28,8 +20,8 @@ export function configureMockServer<TConfig extends Configuration>(config: TConf
     /**
      * Server setup for storing mocks.
      */
-    server() {
-      const store = new Map<string, Value>();
+    server<TValue>(serverConfig: ServerConfiguration<TPayload, TValue>) {
+      const store = new Map<string, TValue>();
 
       function decode(url: string) {
         return JSON.parse(decodeURIComponent(url));
@@ -39,16 +31,14 @@ export function configureMockServer<TConfig extends Configuration>(config: TConf
         url: rootUrl,
         resolve(url: string) {
           if (url.startsWith(setUrl)) {
-            const parsed = url.slice(setUrl.length);
-            const resolved = config.resolve(decode(parsed));
-            store.set(resolved.key, resolved.value);
+            const decoded = decode(url.slice(setUrl.length));
+            store.set(serverConfig.getKey(decoded), serverConfig.getValue(decoded));
             return;
           }
 
           if (url.startsWith(getUrl)) {
-            const parsed = url.slice(getUrl.length);
-            const resolved = config.resolve(decode(parsed));
-            return store.get(resolved.key);
+            const decoded = decode(url.slice(getUrl.length));
+            return store.get(serverConfig.getKey(decoded));
           }
 
           if (url.startsWith(getAllUrl)) {
@@ -70,7 +60,7 @@ export function configureMockServer<TConfig extends Configuration>(config: TConf
         return response.json();
       }
 
-      function encode(request: Request) {
+      function encode(request: TPayload) {
         return encodeURIComponent(JSON.stringify(request));
       }
 
@@ -78,7 +68,7 @@ export function configureMockServer<TConfig extends Configuration>(config: TConf
         /**
          * Registers a mock for a request.
          */
-        set(request: Request) {
+        set(request: TPayload) {
           return fetch(clientConfig.address + setUrl + encode(request), {
             method: "POST",
             headers,
@@ -88,7 +78,7 @@ export function configureMockServer<TConfig extends Configuration>(config: TConf
         /**
          * Returns the mock for a request.
          */
-        get(request: Request) {
+        get(request: TPayload) {
           return fetch(clientConfig.address + getUrl + encode(request), {
             method: "GET",
             headers,

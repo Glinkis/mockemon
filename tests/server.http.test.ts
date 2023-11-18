@@ -8,18 +8,13 @@ interface RequestMock {
   body: Record<string, unknown>;
 }
 
-const config = configureMockServer({
-  resolve: (request: RequestMock) => ({
-    key: JSON.stringify({
-      url: request.url,
-      method: request.method,
-    }),
-    value: request.body,
-  }),
-});
+const config = configureMockServer<RequestMock>();
 
 function createNodeHttpMockServer() {
-  const mockServer = config.server();
+  const mockServer = config.server({
+    getKey: (request) => `${request.method} ${request.url}`,
+    getValue: (request) => request.body,
+  });
 
   http
     .createServer((req, res) => {
@@ -60,10 +55,10 @@ it("can configure a server with http", async () => {
   });
 
   expect(await client.getAll()).toStrictEqual({
-    '{"url":"/some/url","method":"POST"}': {
+    "POST /some/url": {
       foo: "foo",
     },
-    '{"url":"/some/other/url","method":"POST"}': {
+    "POST /some/other/url": {
       bar: "bar",
     },
   });

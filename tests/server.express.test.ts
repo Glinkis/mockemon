@@ -8,18 +8,13 @@ interface RequestMock {
   body: unknown;
 }
 
-const config = configureMockServer({
-  resolve: (request: RequestMock) => ({
-    key: JSON.stringify({
-      url: request.url,
-      method: request.method,
-    }),
-    value: request.body,
-  }),
-});
+const config = configureMockServer<RequestMock>();
 
 function createExpressMockServer() {
-  const mockServer = config.server();
+  const mockServer = config.server({
+    getKey: (request) => `${request.method} ${request.url}`,
+    getValue: (request) => request.body,
+  });
 
   express()
     .all(mockServer.url + "*", (req, res) => {
@@ -58,10 +53,10 @@ it("can configure a server with express", async () => {
   });
 
   expect(await client.getAll()).toStrictEqual({
-    '{"url":"/some/url","method":"POST"}': {
+    "POST /some/url": {
       foo: "foo",
     },
-    '{"url":"/some/other/url","method":"POST"}': {
+    "POST /some/other/url": {
       bar: "bar",
     },
   });
