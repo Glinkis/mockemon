@@ -19,7 +19,11 @@ function createNodeHttpMockServer() {
   http
     .createServer((req, res) => {
       if (req.url?.startsWith(mockServer.url)) {
-        res.end(JSON.stringify(mockServer.resolve(req.url)));
+        res.end(JSON.stringify(mockServer.resolveMockRequest(req.url)));
+      }
+
+      if (req.url?.startsWith("/api")) {
+        res.end(JSON.stringify(mockServer.getMockedValue(`${req.method} ${req.url.slice(4)}`)));
       }
     })
     .listen(4001);
@@ -43,7 +47,7 @@ it("can configure a server with http", async () => {
 
   const mock1: RequestMock = {
     url: "/some/url",
-    method: "POST",
+    method: "GET",
     body: {
       foo: "foo",
     },
@@ -57,18 +61,29 @@ it("can configure a server with http", async () => {
 
   await client.set({
     url: "/some/other/url",
-    method: "POST",
+    method: "GET",
     body: {
       bar: "bar",
     },
   });
 
   expect(await client.getAll()).toStrictEqual({
-    "POST /some/url": {
+    "GET /some/url": {
       foo: "foo",
     },
-    "POST /some/other/url": {
+    "GET /some/other/url": {
       bar: "bar",
     },
+  });
+
+  const mocked = await fetch("http://localhost:4001/api/some/url", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  expect(await mocked.json()).toStrictEqual({
+    foo: "foo",
   });
 });

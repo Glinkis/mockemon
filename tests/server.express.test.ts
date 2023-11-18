@@ -18,7 +18,10 @@ function createExpressMockServer() {
 
   express()
     .all(mockServer.url + "*", (req, res) => {
-      res.json(mockServer.resolve(req.originalUrl));
+      res.json(mockServer.resolveMockRequest(req.originalUrl));
+    })
+    .all("/api*", (req, res) => {
+      res.json(mockServer.getMockedValue(`${req.method} ${req.originalUrl.slice(4)}`));
     })
     .listen(4000);
 }
@@ -41,7 +44,7 @@ it("can configure a server with express", async () => {
 
   const mock1: RequestMock = {
     url: "/some/url",
-    method: "POST",
+    method: "GET",
     body: {
       foo: "foo",
     },
@@ -55,18 +58,29 @@ it("can configure a server with express", async () => {
 
   await client.set({
     url: "/some/other/url",
-    method: "POST",
+    method: "GET",
     body: {
       bar: "bar",
     },
   });
 
   expect(await client.getAll()).toStrictEqual({
-    "POST /some/url": {
+    "GET /some/url": {
       foo: "foo",
     },
-    "POST /some/other/url": {
+    "GET /some/other/url": {
       bar: "bar",
     },
+  });
+
+  const mocked = await fetch("http://localhost:4000/api/some/url", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  expect(await mocked.json()).toStrictEqual({
+    foo: "foo",
   });
 });

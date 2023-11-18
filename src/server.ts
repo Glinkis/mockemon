@@ -39,7 +39,7 @@ export function configureMockServer<TPayload>() {
 
       return {
         url: rootUrl,
-        resolve(url: string) {
+        resolveMockRequest(url: string) {
           if (url.startsWith(setUrl)) {
             const decoded = decode(url.slice(setUrl.length));
             store.set(serverConfig.getKey(decoded), serverConfig.getValue(decoded));
@@ -54,6 +54,9 @@ export function configureMockServer<TPayload>() {
           if (url.startsWith(getAllUrl)) {
             return Object.fromEntries(store);
           }
+        },
+        getMockedValue(key: string) {
+          return store.get(key);
         },
       };
     },
