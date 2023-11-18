@@ -9,8 +9,8 @@ interface RequestMock {
 }
 
 const config = configureMockServer<RequestMock>({
-  realApiUrl: "/api/",
-  mockApiUrl: "/mock/",
+  realApiUrl: "/api",
+  mockApiUrl: "/mock",
 });
 
 function createExpressMockServer() {
@@ -21,7 +21,8 @@ function createExpressMockServer() {
 
   express()
     .all(mockServer.realApiUrl + "*", (req, res) => {
-      res.json(mockServer.getMockedValue(`${req.method} ${req.originalUrl.slice(4)}`));
+      const url = req.originalUrl.slice(mockServer.realApiUrl.length);
+      res.json(mockServer.getMockedValue(`${req.method} ${url}`));
     })
     .all(mockServer.mockApiUrl + "*", (req, res) => {
       res.json(mockServer.resolveMockRequest(req.originalUrl));
