@@ -13,9 +13,7 @@ const config = configureMockServer<RequestMock>({
   mockApiUrl: "/mock",
 });
 
-const server = config.server({
-  getValue: (payload) => payload.body,
-});
+const server = config.server();
 
 express()
   .all(server.realApiUrl + "*", (req, res) => {
@@ -29,6 +27,7 @@ express()
     const result = server.resolveMockApiRequest({
       url: req.originalUrl,
       getKey: (payload) => `${payload.method} ${payload.path}`,
+      getValue: (payload) => payload.body,
     });
     res.json(result);
   })

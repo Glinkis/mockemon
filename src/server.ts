@@ -3,10 +3,6 @@ interface Configuration {
   mockApiUrl: string;
 }
 
-interface ServerConfiguration<TPayload, TValue> {
-  getValue: (payload: TPayload) => TValue;
-}
-
 interface RequestArgs {
   url: string;
   method: string;
@@ -46,8 +42,8 @@ export function configureMockServer<TPayload>(config: Configuration) {
     /**
      * Server setup for storing mocks.
      */
-    server<TValue>(serverConfig: ServerConfiguration<TPayload, TValue>) {
-      const store = new Map<string, TValue>();
+    server() {
+      const store = new Map<string, unknown>();
 
       function decode(url: string) {
         return JSON.parse(decodeURIComponent(url));
@@ -77,6 +73,7 @@ export function configureMockServer<TPayload>(config: Configuration) {
          * @param payload The payload that was sent from the client.
          */
         getKey: (payload: TPayload) => string;
+        getValue: (payload: TPayload) => unknown;
       }
 
       return {
@@ -101,7 +98,7 @@ export function configureMockServer<TPayload>(config: Configuration) {
 
           if (args.url.startsWith(setUrl)) {
             const decoded = decode(args.url.slice(setUrl.length));
-            store.set(args.getKey(decoded), serverConfig.getValue(decoded));
+            store.set(args.getKey(decoded), args.getValue(decoded));
             return;
           }
         },
