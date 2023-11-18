@@ -197,8 +197,12 @@ For this example, we will use express.
 import express from "express";
 import { mockServer } from "./mock-server";
 
-const server = mockServer.server();
 const app = express();
+
+// In addition to the api resolvers,
+// this provides access to the urls we previously configured.
+// This way we don't have to type them out again, and have a single source of truth.
+const server = mockServer.server();
 
 app.all(server.realApiUrl + "*", (req, res) => {
   const result = server.resolveRealApiRequest({
