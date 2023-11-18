@@ -40,7 +40,6 @@ interface ClientConfiguration {
 
 export function configureMockServer<TPayload>(config: Configuration) {
   const setUrl = config.mockApiUrl + "/set";
-  const getUrl = config.mockApiUrl + "/get";
   const getAllUrl = config.mockApiUrl + "/get-all";
 
   return {
@@ -100,11 +99,6 @@ export function configureMockServer<TPayload>(config: Configuration) {
             return Object.fromEntries(store);
           }
 
-          if (args.url.startsWith(getUrl)) {
-            const decoded = decode(args.url.slice(getUrl.length));
-            return store.get(args.getKey(decoded));
-          }
-
           if (args.url.startsWith(setUrl)) {
             const decoded = decode(args.url.slice(setUrl.length));
             store.set(args.getKey(decoded), serverConfig.getValue(decoded));
@@ -124,22 +118,12 @@ export function configureMockServer<TPayload>(config: Configuration) {
 
       return {
         /**
-         * Registers a mock for a request.
+         * Send a new mock to the server.
          */
         set(payload: TPayload) {
           return clientConfig.request({
             url: clientConfig.address + setUrl + encode(payload),
             method: "POST",
-          });
-        },
-
-        /**
-         * Returns the mock for a request.
-         */
-        get(payload: TPayload) {
-          return clientConfig.request({
-            url: clientConfig.address + getUrl + encode(payload),
-            method: "GET",
           });
         },
 

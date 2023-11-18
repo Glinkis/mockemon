@@ -45,18 +45,12 @@ const client = config.client({
 });
 
 it("can configure a server with express", async () => {
-  const mock1: RequestMock = {
+  await client.set({
     path: "/some/url",
     method: "GET",
     body: {
       foo: "foo",
     },
-  };
-
-  await client.set(mock1);
-
-  expect(await client.get(mock1)).toStrictEqual({
-    foo: "foo",
   });
 
   await client.set({

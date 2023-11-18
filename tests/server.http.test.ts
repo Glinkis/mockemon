@@ -57,10 +57,6 @@ it("can configure a server with http", async () => {
 
   await client.set(mock1);
 
-  expect(await client.get(mock1)).toStrictEqual({
-    foo: "foo",
-  });
-
   await client.set({
     path: "/some/other/url",
     method: "POST",
