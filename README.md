@@ -119,7 +119,7 @@ const names3 = buildNames((f) => {
 
 #### Combining Builders
 
-If you have a value that that is a superset of another, you can reuse the builder of the subset in the builder of the superset by simply spreading it. Since the builder is a function, the values will still be generated at the time of the call.
+If you have a value that that is a superset of another, you can reuse the builder of the subset in the builder of the superset by simply spreading it.
 
 ```ts
 interface Person {
@@ -168,7 +168,8 @@ This utility provides an easy way for creating and interacting with a local mock
 
 ### Configuration
 
-To use the mock server, you must first configure it. This is done by importing and calling `configureMockServer`
+To use the mock server, you must first configure it.<br>
+This is done by importing and calling `configureMockServer`
 
 ```ts
 import { configureMockServer } from "mockemon/server";
@@ -190,8 +191,8 @@ export const mockServer = configureMockServer<Payload>({
 
 ### Server
 
-Then configure a server with the mock handlers. This should be compatible with any server setup.
-For this example, we will use express.
+Then configure a server with the mock handlers. This should be compatible with any server setup.<br>
+For this example, we will use [express](https://expressjs.com/).
 
 ```ts
 import express from "express";
