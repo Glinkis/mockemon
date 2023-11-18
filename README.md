@@ -158,6 +158,8 @@ const buildPets = createMockBuilder((f) => {
 });
 ```
 
+<hr/>
+
 ## The Mock Server
 
 ### Configuration
@@ -167,17 +169,96 @@ To use the mock server, you must first configure it. This is done by importing a
 ```ts
 import { configureMockServer } from "mockemon/server";
 
-// The payload type is used to define the shape of the data that will be sent to the server.
+// The payload type is used to define the shape of the data that will be sent to the server. This can be any shape, since you have full control over how you use it. We'll see this further down.
 type Payload = {
   path: string;
   method: string;
-  status: number;
+  params: Record<string, string>;
   body: unknown;
 };
 
 // Since a single server will handle both the "real" requests that we want to serve our mocks to as well as the requests that facilitates the mocking, we need to be able to distinguish between the two.
-export const { client, server } = configureMockServer<Payload>({
-  realApiUrl: "/api",
+export const mockServer = configureMockServer<Payload>({
+  realApiUrl: "/api", // <- This is where your application will make regular requests.
   mockApiUrl: "/mocks",
 });
+```
+
+### Server
+
+Then configure a server with the mock handlers. This should be compatible with any server setup.
+For this example, we will use express.
+
+```ts
+import express from "express";
+import { mockServer } from "./mock-server";
+
+const server = mockServer.server();
+const app = express();
+
+app.all(server.realApiUrl + "*", (req, res) => {
+  const result = server.resolveRealApiRequest({
+    url: req.originalUrl,
+    getKey: (path) => `${req.method} ${path}`,
+  });
+  res.json(result);
+});
+
+app.all(server.mockApiUrl + "*", (req, res) => {
+  const result = server.resolveMockApiRequest({
+    url: req.originalUrl,
+    getKey: (payload) => `${payload.method} ${payload.path}`,
+    getValue: (payload) => payload.body,
+  });
+  res.json(result);
+});
+
+app.listen(4000);
+```
+
+That's it for the server!
+
+### Client
+
+Now let's look at how create the client part.
+
+```ts
+import { mockServer } from "./mock-server";
+
+export const client = mockServer.client({
+  // This should be the address of the server we just created.
+  address: "http://localhost:4000",
+  // We also need to provide how to send requests.
+  request({ url, method }) {
+    // We're using fetch here, but any way to make a request will work,
+    // as long as it supprts passing a method and a url.
+    const response = await fetch(url, {
+      method,
+    });
+    return response.json();
+  },
+});
+```
+
+Then we can start mocking endpoints!
+
+```ts
+import { client } from "./client";
+
+// Since we've already provided the shape of the payload in the initial configuration, we get some nice intellisense here.
+client.set({
+  path: "/animals/cat",
+  method: "GET",
+  body: {
+    name: "Luna",
+    breed: "British Shorthair",
+  },
+});
+```
+
+```ts
+const cat = await fetch("http://localhost:4000/api/animals/cat").then((res) => res.json());
+
+console.log(cat);
+// { name: "Luna", breed: "Brithish Shorthair" }
 ```
