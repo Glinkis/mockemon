@@ -8,7 +8,10 @@ interface RequestMock {
   body: unknown;
 }
 
-const config = configureMockServer<RequestMock>();
+const config = configureMockServer<RequestMock>({
+  realApiUrl: "/api/",
+  mockApiUrl: "/mock/",
+});
 
 function createExpressMockServer() {
   const mockServer = config.server({
@@ -17,11 +20,11 @@ function createExpressMockServer() {
   });
 
   express()
-    .all(mockServer.url + "*", (req, res) => {
-      res.json(mockServer.resolveMockRequest(req.originalUrl));
-    })
-    .all("/api*", (req, res) => {
+    .all(mockServer.realApiUrl + "*", (req, res) => {
       res.json(mockServer.getMockedValue(`${req.method} ${req.originalUrl.slice(4)}`));
+    })
+    .all(mockServer.mockApiUrl + "*", (req, res) => {
+      res.json(mockServer.resolveMockRequest(req.originalUrl));
     })
     .listen(4000);
 }

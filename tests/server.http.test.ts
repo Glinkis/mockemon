@@ -8,7 +8,10 @@ interface RequestMock {
   body: Record<string, unknown>;
 }
 
-const config = configureMockServer<RequestMock>();
+const config = configureMockServer<RequestMock>({
+  realApiUrl: "/api/",
+  mockApiUrl: "/mock/",
+});
 
 function createNodeHttpMockServer() {
   const mockServer = config.server({
@@ -18,12 +21,11 @@ function createNodeHttpMockServer() {
 
   http
     .createServer((req, res) => {
-      if (req.url?.startsWith(mockServer.url)) {
-        res.end(JSON.stringify(mockServer.resolveMockRequest(req.url)));
-      }
-
-      if (req.url?.startsWith("/api")) {
+      if (req.url?.startsWith(mockServer.realApiUrl)) {
         res.end(JSON.stringify(mockServer.getMockedValue(`${req.method} ${req.url.slice(4)}`)));
+      }
+      if (req.url?.startsWith(mockServer.mockApiUrl)) {
+        res.end(JSON.stringify(mockServer.resolveMockRequest(req.url)));
       }
     })
     .listen(4001);

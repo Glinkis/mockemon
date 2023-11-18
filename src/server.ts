@@ -1,3 +1,8 @@
+interface Configuration {
+  mockApiUrl: string;
+  realApiUrl: string;
+}
+
 interface ServerConfiguration<TPayload, TValue> {
   getKey: (payload: TPayload) => string;
   getValue: (payload: TPayload) => TValue;
@@ -20,13 +25,16 @@ interface ClientConfiguration {
   request: (args: RequestArgs) => Promise<unknown>;
 }
 
-export function configureMockServer<TPayload>() {
-  const rootUrl = "/mocks/";
+export function configureMockServer<TPayload>(config: Configuration) {
+  const rootUrl = config.mockApiUrl;
   const setUrl = rootUrl + "set/";
   const getUrl = rootUrl + "get/";
   const getAllUrl = rootUrl + "get-all";
 
   return {
+    mockApiUrl: config.mockApiUrl,
+    realApiUrl: config.realApiUrl,
+
     /**
      * Server setup for storing mocks.
      */
@@ -38,7 +46,11 @@ export function configureMockServer<TPayload>() {
       }
 
       return {
-        url: rootUrl,
+        mockApiUrl: config.mockApiUrl,
+        realApiUrl: config.realApiUrl,
+        getMockedValue(key: string) {
+          return store.get(key);
+        },
         resolveMockRequest(url: string) {
           if (url.startsWith(setUrl)) {
             const decoded = decode(url.slice(setUrl.length));
@@ -54,9 +66,6 @@ export function configureMockServer<TPayload>() {
           if (url.startsWith(getAllUrl)) {
             return Object.fromEntries(store);
           }
-        },
-        getMockedValue(key: string) {
-          return store.get(key);
         },
       };
     },
