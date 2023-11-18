@@ -3,6 +3,11 @@ interface ServerConfiguration<TPayload, TValue> {
   getValue: (payload: TPayload) => TValue;
 }
 
+interface RequestArgs {
+  url: string;
+  method: string;
+}
+
 interface ClientConfiguration {
   /**
    * The address of the server.
@@ -12,7 +17,7 @@ interface ClientConfiguration {
   /**
    * The request function.
    */
-  request: (request: { url: string; method: string }) => Promise<unknown>;
+  request: (args: RequestArgs) => Promise<unknown>;
 }
 
 export function configureMockServer<TPayload>() {
