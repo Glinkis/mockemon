@@ -110,9 +110,9 @@ export function configureMockServer<TPayload>(config: Configuration) {
         /**
          * Registers a mock for a request.
          */
-        set(request: TPayload) {
+        set(payload: TPayload) {
           return clientConfig.request({
-            url: clientConfig.address + setUrl + encode(request),
+            url: clientConfig.address + setUrl + encode(payload),
             method: "POST",
           });
         },
@@ -120,9 +120,9 @@ export function configureMockServer<TPayload>(config: Configuration) {
         /**
          * Returns the mock for a request.
          */
-        get(request: TPayload) {
+        get(payload: TPayload) {
           return clientConfig.request({
-            url: clientConfig.address + getUrl + encode(request),
+            url: clientConfig.address + getUrl + encode(payload),
             method: "GET",
           });
         },
