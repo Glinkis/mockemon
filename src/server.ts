@@ -19,7 +19,21 @@ interface ClientConfiguration {
   address: string;
 
   /**
-   * The request function.
+   * This should be a function that makes a request to the server.
+   *
+   * In the browser, this could be a function that uses the `fetch` API.
+   *
+   * @example
+   * ```ts
+   * const client = config.client({
+   *  async request({ url, method }) {
+   *   const response = await fetch(url, {
+   *     method,
+   *   });
+   *   return response.json();
+   *  }
+   * })
+   * ```
    */
   request: (args: RequestArgs) => Promise<unknown>;
 }
