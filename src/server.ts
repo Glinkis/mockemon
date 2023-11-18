@@ -47,9 +47,17 @@ export function configureMockServer<TPayload>(config: Configuration) {
       return {
         mockApiUrl: config.mockApiUrl,
         realApiUrl: config.realApiUrl,
+
+        /**
+         * Returns the mocked value for a request.
+         */
         getMockedValue(key: string) {
           return store.get(key);
         },
+
+        /**
+         * Resolves a request to the mocking API.
+         */
         resolveMockRequest(url: string) {
           if (url.startsWith(setUrl)) {
             const decoded = decode(url.slice(setUrl.length));
