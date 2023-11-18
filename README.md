@@ -164,6 +164,8 @@ const buildPets = createMockBuilder((f) => {
 
 ## The Mock Server
 
+This utility provides an easy way for creating and interacting with a local mock server.
+
 ### Configuration
 
 To use the mock server, you must first configure it. This is done by importing and calling `configureMockServer`
