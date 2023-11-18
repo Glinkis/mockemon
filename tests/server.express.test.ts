@@ -19,14 +19,14 @@ const server = config.server({
 
 express()
   .all(server.realApiUrl + "*", (req, res) => {
-    const result = server.getMockedValue({
+    const result = server.resolveRealApiRequest({
       url: req.originalUrl,
       getKey: (path) => `${req.method} ${path}`,
     });
     res.json(result);
   })
   .all(server.mockApiUrl + "*", (req, res) => {
-    const result = server.resolveMockRequest({
+    const result = server.resolveMockApiRequest({
       url: req.originalUrl,
       getKey: (payload) => `${payload.method} ${payload.path}`,
     });

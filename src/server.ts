@@ -1,6 +1,6 @@
 interface Configuration {
-  mockApiUrl: string;
   realApiUrl: string;
+  mockApiUrl: string;
 }
 
 interface ServerConfiguration<TPayload, TValue> {
@@ -80,13 +80,13 @@ export function configureMockServer<TPayload>(config: Configuration) {
       }
 
       return {
-        mockApiUrl: config.mockApiUrl,
         realApiUrl: config.realApiUrl,
+        mockApiUrl: config.mockApiUrl,
 
         /**
          * Returns the mocked value for a request.
          */
-        getMockedValue(args: GetMockedValueArgs) {
+        resolveRealApiRequest(args: GetMockedValueArgs) {
           const url = args.url.slice(config.realApiUrl.length);
           return store.get(args.getKey(url));
         },
@@ -94,7 +94,7 @@ export function configureMockServer<TPayload>(config: Configuration) {
         /**
          * Resolves a request to the mocking API.
          */
-        resolveMockRequest(args: ResolveMockRequstArgs) {
+        resolveMockApiRequest(args: ResolveMockRequstArgs) {
           if (args.url.startsWith(getAllUrl)) {
             return Object.fromEntries(store);
           }

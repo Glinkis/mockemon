@@ -20,14 +20,14 @@ const server = config.server({
 http
   .createServer((req, res) => {
     if (req.url?.startsWith(server.realApiUrl)) {
-      const result = server.getMockedValue({
+      const result = server.resolveRealApiRequest({
         url: req.url,
         getKey: (path) => `${req.method} ${path}`,
       });
       res.end(JSON.stringify(result));
     }
     if (req.url?.startsWith(server.mockApiUrl)) {
-      const result = server.resolveMockRequest({
+      const result = server.resolveMockApiRequest({
         url: req.url,
         getKey: (payload) => `${payload.method} ${payload.path}`,
       });
