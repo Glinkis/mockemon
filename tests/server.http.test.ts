@@ -15,18 +15,24 @@ const config = configureMockServer<RequestMock>({
 
 function createNodeHttpMockServer() {
   const mockServer = config.server({
-    getKey: (payload) => `${payload.method} ${payload.url}`,
     getValue: (payload) => payload.body,
   });
 
   http
     .createServer((req, res) => {
       if (req.url?.startsWith(mockServer.realApiUrl)) {
-        const url = req.url.slice(mockServer.realApiUrl.length);
-        res.end(JSON.stringify(mockServer.getMockedValue(`${req.method} ${url}`)));
+        const result = mockServer.getMockedValue({
+          url: req.url,
+          getKey: (url) => `${req.method} ${url}`,
+        });
+        res.end(JSON.stringify(result));
       }
       if (req.url?.startsWith(mockServer.mockApiUrl)) {
-        res.end(JSON.stringify(mockServer.resolveMockRequest(req.url)));
+        const result = mockServer.resolveMockRequest({
+          url: req.url,
+          getKey: (payload) => `${payload.method} ${payload.url}`,
+        });
+        res.end(JSON.stringify(result));
       }
     })
     .listen(4001);

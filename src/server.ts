@@ -4,7 +4,6 @@ interface Configuration {
 }
 
 interface ServerConfiguration<TPayload, TValue> {
-  getKey: (payload: TPayload) => string;
   getValue: (payload: TPayload) => TValue;
 }
 
@@ -31,9 +30,6 @@ export function configureMockServer<TPayload>(config: Configuration) {
   const getAllUrl = config.mockApiUrl + "get-all";
 
   return {
-    mockApiUrl: config.mockApiUrl,
-    realApiUrl: config.realApiUrl,
-
     /**
      * Server setup for storing mocks.
      */
@@ -44,6 +40,30 @@ export function configureMockServer<TPayload>(config: Configuration) {
         return JSON.parse(decodeURIComponent(url));
       }
 
+      interface GetMockedValueArgs {
+        /**
+         * The full url path of the request.
+         */
+        url: `${typeof config.realApiUrl}${string}`;
+
+        /**
+         * This should resolve to a key that uniquely identifies the request.
+         */
+        getKey: (url: string) => string;
+      }
+
+      interface ResolveMockRequstArgs {
+        /**
+         * The full url path of the request.
+         */
+        url: `${typeof config.mockApiUrl}${string}`;
+
+        /**
+         * This should resolve to a key that uniquely identifies the request.
+         */
+        getKey: (payload: TPayload) => string;
+      }
+
       return {
         mockApiUrl: config.mockApiUrl,
         realApiUrl: config.realApiUrl,
@@ -51,26 +71,27 @@ export function configureMockServer<TPayload>(config: Configuration) {
         /**
          * Returns the mocked value for a request.
          */
-        getMockedValue(key: string) {
-          return store.get(key);
+        getMockedValue(args: GetMockedValueArgs) {
+          const url = args.url.slice(config.realApiUrl.length);
+          return store.get(args.getKey(url));
         },
 
         /**
          * Resolves a request to the mocking API.
          */
-        resolveMockRequest(url: string) {
-          if (url.startsWith(setUrl)) {
-            const decoded = decode(url.slice(setUrl.length));
-            store.set(serverConfig.getKey(decoded), serverConfig.getValue(decoded));
+        resolveMockRequest(args: ResolveMockRequstArgs) {
+          if (args.url.startsWith(setUrl)) {
+            const decoded = decode(args.url.slice(setUrl.length));
+            store.set(args.getKey(decoded), serverConfig.getValue(decoded));
             return;
           }
 
-          if (url.startsWith(getUrl)) {
-            const decoded = decode(url.slice(getUrl.length));
-            return store.get(serverConfig.getKey(decoded));
+          if (args.url.startsWith(getUrl)) {
+            const decoded = decode(args.url.slice(getUrl.length));
+            return store.get(args.getKey(decoded));
           }
 
-          if (url.startsWith(getAllUrl)) {
+          if (args.url.startsWith(getAllUrl)) {
             return Object.fromEntries(store);
           }
         },

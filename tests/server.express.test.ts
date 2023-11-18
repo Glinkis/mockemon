@@ -15,17 +15,23 @@ const config = configureMockServer<RequestMock>({
 
 function createExpressMockServer() {
   const mockServer = config.server({
-    getKey: (payload) => `${payload.method} ${payload.url}`,
     getValue: (payload) => payload.body,
   });
 
   express()
     .all(mockServer.realApiUrl + "*", (req, res) => {
-      const url = req.originalUrl.slice(mockServer.realApiUrl.length);
-      res.json(mockServer.getMockedValue(`${req.method} ${url}`));
+      const result = mockServer.getMockedValue({
+        url: req.originalUrl,
+        getKey: (url) => `${req.method} ${url}`,
+      });
+      res.json(result);
     })
     .all(mockServer.mockApiUrl + "*", (req, res) => {
-      res.json(mockServer.resolveMockRequest(req.originalUrl));
+      const result = mockServer.resolveMockRequest({
+        url: req.originalUrl,
+        getKey: (payload) => `${payload.method} ${payload.url}`,
+      });
+      res.json(result);
     })
     .listen(4000);
 }
