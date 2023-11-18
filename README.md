@@ -30,6 +30,8 @@ yarn add mockemon
 bun add mockemon
 ```
 
+<hr/>
+
 ## The Mock Builder
 
 The builder utility allows you to create strongly typed mocks for your tests, or anywhere else.
@@ -240,7 +242,7 @@ export const client = mockServer.client({
 });
 ```
 
-Then we can start mocking endpoints!
+Now we can start creating mocks.
 
 ```ts
 import { client } from "./client";
@@ -255,6 +257,8 @@ client.set({
   },
 });
 ```
+
+Making a regular request now responds with the mocked data!
 
 ```ts
 const cat = await fetch("http://localhost:4000/api/animals/cat").then((res) => res.json());
