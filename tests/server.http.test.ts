@@ -30,6 +30,15 @@ it("can configure a server with http", async () => {
 
   const client = config.client({
     address: "http://localhost:4001",
+    async request({ url, method }) {
+      const response = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      return response.json();
+    },
   });
 
   const mock1: RequestMock = {

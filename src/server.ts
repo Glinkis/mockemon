@@ -1,13 +1,18 @@
+interface ServerConfiguration<TPayload, TValue> {
+  getKey: (payload: TPayload) => string;
+  getValue: (payload: TPayload) => TValue;
+}
+
 interface ClientConfiguration {
   /**
    * The address of the server.
    */
   address: string;
-}
 
-interface ServerConfiguration<TPayload, TValue> {
-  getKey: (payload: TPayload) => string;
-  getValue: (payload: TPayload) => TValue;
+  /**
+   * The request function.
+   */
+  request: (request: { url: string; method: string }) => Promise<unknown>;
 }
 
 export function configureMockServer<TPayload>() {
@@ -52,14 +57,6 @@ export function configureMockServer<TPayload>() {
      * Client for interacting with the mock server.
      */
     client(clientConfig: ClientConfiguration) {
-      const headers: HeadersInit = {
-        "Content-Type": "application/json",
-      };
-
-      function unwrap(response: Response) {
-        return response.json();
-      }
-
       function encode(request: TPayload) {
         return encodeURIComponent(JSON.stringify(request));
       }
@@ -69,30 +66,30 @@ export function configureMockServer<TPayload>() {
          * Registers a mock for a request.
          */
         set(request: TPayload) {
-          return fetch(clientConfig.address + setUrl + encode(request), {
+          return clientConfig.request({
+            url: clientConfig.address + setUrl + encode(request),
             method: "POST",
-            headers,
-          }).then(unwrap);
+          });
         },
 
         /**
          * Returns the mock for a request.
          */
         get(request: TPayload) {
-          return fetch(clientConfig.address + getUrl + encode(request), {
+          return clientConfig.request({
+            url: clientConfig.address + getUrl + encode(request),
             method: "GET",
-            headers,
-          }).then(unwrap);
+          });
         },
 
         /**
          * Returns all mocks.
          */
         getAll() {
-          return fetch(clientConfig.address + getAllUrl, {
+          return clientConfig.request({
+            url: clientConfig.address + getAllUrl,
             method: "GET",
-            headers,
-          }).then(unwrap);
+          });
         },
       };
     },
