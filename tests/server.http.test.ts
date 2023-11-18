@@ -13,34 +13,30 @@ const config = configureMockServer<RequestMock>({
   mockApiUrl: "/mock",
 });
 
-function createNodeHttpMockServer() {
-  const mockServer = config.server({
-    getValue: (payload) => payload.body,
-  });
+const server = config.server({
+  getValue: (payload) => payload.body,
+});
 
-  http
-    .createServer((req, res) => {
-      if (req.url?.startsWith(mockServer.realApiUrl)) {
-        const result = mockServer.getMockedValue({
-          url: req.url,
-          getKey: (url) => `${req.method} ${url}`,
-        });
-        res.end(JSON.stringify(result));
-      }
-      if (req.url?.startsWith(mockServer.mockApiUrl)) {
-        const result = mockServer.resolveMockRequest({
-          url: req.url,
-          getKey: (payload) => `${payload.method} ${payload.url}`,
-        });
-        res.end(JSON.stringify(result));
-      }
-    })
-    .listen(4001);
-}
+http
+  .createServer((req, res) => {
+    if (req.url?.startsWith(server.realApiUrl)) {
+      const result = server.getMockedValue({
+        url: req.url,
+        getKey: (url) => `${req.method} ${url}`,
+      });
+      res.end(JSON.stringify(result));
+    }
+    if (req.url?.startsWith(server.mockApiUrl)) {
+      const result = server.resolveMockRequest({
+        url: req.url,
+        getKey: (payload) => `${payload.method} ${payload.url}`,
+      });
+      res.end(JSON.stringify(result));
+    }
+  })
+  .listen(4001);
 
 it("can configure a server with http", async () => {
-  createNodeHttpMockServer();
-
   const client = config.client({
     address: "http://localhost:4001",
     async request({ url, method }) {
