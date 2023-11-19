@@ -19,7 +19,7 @@ const config = configureMockServer<Payload, RequestIdentity>({
 const server = config.server();
 
 express()
-  .use(express.json())
+  .use(express.json({ type: () => true }))
   .all(server.realApiUrl + "*", (req, res) => {
     const result = server.resolveRealApiRequest({
       url: req.originalUrl,
@@ -84,9 +84,21 @@ it("can configure a server with express", async () => {
 
   const mockedPost = await fetch("http://localhost:4000/api/some/other/url", {
     method: "POST",
+    body: JSON.stringify({
+      bar: "bar baz bax",
+    }),
   });
 
   expect(await mockedPost.json()).toStrictEqual({
     bar: "bar",
+  });
+
+  const latestHistory = await client.getLatestHistory({
+    path: "/some/other/url",
+    method: "POST",
+  });
+
+  expect(latestHistory).toStrictEqual({
+    bar: "bar baz bax",
   });
 });
