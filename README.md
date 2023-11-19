@@ -84,14 +84,14 @@ It's also possible to pass a function to the builder. This function will be call
 
 ```ts
 const petOwner = buildPetOwner((f) => ({
-  pet: f.helpes.arrayElement(["Daisy", "Bella", "Luna"] as const]),
+  pet: f.helpers.arrayElement(["Daisy", "Bella", "Luna"] as const]),
 }));
 // { name: string, pet: "Daisy" | "Bella" | "Luna" }
 ```
 
 ### Mocking Other Types
 
-The builder can also be used to mock other types of values as well, shich as primitives or arrays.
+The builder can also be used to mock other types of values as well, such as primitives or arrays.
 
 ```ts
 // Mocks a string value
@@ -240,7 +240,7 @@ export const client = mockServer.client({
   // We also need to provide how to send requests.
   request({ url, method }) {
     // We're using fetch here, but any way to make a request will work,
-    // as long as it supprts passing a method and a url.
+    // as long as it supports passing a method and a url.
     const response = await fetch(url, {
       method,
     });
@@ -271,5 +271,5 @@ Making a regular request now responds with the mocked data!
 const cat = await fetch("http://localhost:4000/api/animals/cat").then((res) => res.json());
 
 console.log(cat);
-// { name: "Luna", breed: "Brithish Shorthair" }
+// { name: "Luna", breed: "British Shorthair" }
 ```

@@ -62,7 +62,7 @@ export function configureMockServer<TPayload>(config: Configuration) {
         getKey: (path: string) => string;
       }
 
-      interface ResolveMockRequstArgs {
+      interface ResolveMockRequestArgs {
         /**
          * The full url path of the request.
          */
@@ -91,7 +91,7 @@ export function configureMockServer<TPayload>(config: Configuration) {
         /**
          * Resolves a request to the mocking API.
          */
-        resolveMockApiRequest(args: ResolveMockRequstArgs) {
+        resolveMockApiRequest(args: ResolveMockRequestArgs) {
           if (args.url.startsWith(getAllUrl)) {
             return Object.fromEntries(store);
           }
