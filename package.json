@@ -32,6 +32,18 @@
         "import": "./dist/builder.js",
         "require": "./dist/builder.cjs"
       }
+    },
+    "./server": {
+      "import": {
+        "types": "./dist/server.d.ts",
+        "import": "./dist/server.js",
+        "require": "./dist/server.cjs"
+      },
+      "require": {
+        "types": "./dist/server.d.cts",
+        "import": "./dist/server.js",
+        "require": "./dist/server.cjs"
+      }
     }
   },
   "scripts": {
