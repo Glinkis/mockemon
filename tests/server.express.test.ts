@@ -2,13 +2,16 @@ import express from "express";
 import { expect, it } from "bun:test";
 import { configureMockServer } from "../src/server";
 
-interface RequestMock {
+interface RequestIdentity {
   path: string;
   method: string;
+}
+
+interface Payload extends RequestIdentity {
   body: Record<string, unknown>;
 }
 
-const config = configureMockServer<RequestMock>({
+const config = configureMockServer<Payload, RequestIdentity>({
   realApiUrl: "/api",
   mockApiUrl: "/mock",
 });
@@ -16,10 +19,12 @@ const config = configureMockServer<RequestMock>({
 const server = config.server();
 
 express()
+  .use(express.json({ type: () => true }))
   .all(server.realApiUrl + "*", (req, res) => {
     const result = server.resolveRealApiRequest({
       url: req.originalUrl,
       getKey: (path) => `${req.method} ${path}`,
+      getValue: () => req.body,
     });
     res.json(result);
   })
@@ -44,7 +49,7 @@ const client = config.client({
 });
 
 it("can configure a server with express", async () => {
-  await client.set({
+  await client.setMock({
     path: "/some/url",
     method: "GET",
     body: {
@@ -52,7 +57,7 @@ it("can configure a server with express", async () => {
     },
   });
 
-  await client.set({
+  await client.setMock({
     path: "/some/other/url",
     method: "POST",
     body: {
@@ -60,7 +65,7 @@ it("can configure a server with express", async () => {
     },
   });
 
-  expect(await client.getAll()).toStrictEqual({
+  expect(await client.getAllMocks()).toStrictEqual({
     "GET /some/url": {
       foo: "foo",
     },
@@ -79,9 +84,21 @@ it("can configure a server with express", async () => {
 
   const mockedPost = await fetch("http://localhost:4000/api/some/other/url", {
     method: "POST",
+    body: JSON.stringify({
+      bar: "bar baz bax",
+    }),
   });
 
   expect(await mockedPost.json()).toStrictEqual({
     bar: "bar",
+  });
+
+  const latestHistory = await client.getLatestHistory({
+    path: "/some/other/url",
+    method: "POST",
+  });
+
+  expect(latestHistory).toStrictEqual({
+    bar: "bar baz bax",
   });
 });

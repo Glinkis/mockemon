@@ -34,16 +34,18 @@ interface ClientConfiguration {
   request: (args: RequestArgs) => Promise<unknown>;
 }
 
-export function configureMockServer<TPayload>(config: Configuration) {
-  const setUrl = config.mockApiUrl + "/set";
-  const getAllUrl = config.mockApiUrl + "/get-all";
+export function configureMockServer<TPayload, TIdentifiers>(config: Configuration) {
+  const setMockUrl = config.mockApiUrl + "/set-mock";
+  const getAllMocksUrl = config.mockApiUrl + "/get-all-mocks";
+  const getLatestHistoryUrl = config.mockApiUrl + "/get-latest-history";
 
   return {
     /**
      * Server setup for storing mocks.
      */
     server() {
-      const store = new Map<string, unknown>();
+      const mocks = new Map<string, unknown>();
+      const history = new Map<string, unknown>();
 
       function decode(url: string) {
         return JSON.parse(decodeURIComponent(url));
@@ -60,6 +62,7 @@ export function configureMockServer<TPayload>(config: Configuration) {
          * @param path The path of the request, without the `realApiUrl` prefix.
          */
         getKey: (path: string) => string;
+        getValue?: (path: string) => unknown;
       }
 
       interface ResolveMockRequestArgs {
@@ -86,23 +89,35 @@ export function configureMockServer<TPayload>(config: Configuration) {
         resolveRealApiRequest(args: GetMockedValueArgs) {
           const url = args.url.slice(config.realApiUrl.length);
           const key = args.getKey(url);
-          return store.get(key);
+
+          if (args.getValue) {
+            const value = args.getValue(url);
+            history.set(key, value);
+          }
+
+          return mocks.get(key);
         },
 
         /**
          * Resolves a request to the mocking API.
          */
         resolveMockApiRequest(args: ResolveMockRequestArgs) {
-          if (args.url.startsWith(getAllUrl)) {
-            return Object.fromEntries(store);
-          }
-
-          if (args.url.startsWith(setUrl)) {
-            const decoded = decode(args.url.slice(setUrl.length));
+          if (args.url.startsWith(setMockUrl)) {
+            const decoded = decode(args.url.slice(setMockUrl.length));
             const key = args.getKey(decoded);
             const value = args.getValue(decoded);
-            store.set(key, value);
+            mocks.set(key, value);
             return;
+          }
+
+          if (args.url.startsWith(getAllMocksUrl)) {
+            return Object.fromEntries(mocks);
+          }
+
+          if (args.url.startsWith(getLatestHistoryUrl)) {
+            const decoded = decode(args.url.slice(getLatestHistoryUrl.length));
+            const key = args.getKey(decoded);
+            return history.get(key);
           }
         },
       };
@@ -112,27 +127,37 @@ export function configureMockServer<TPayload>(config: Configuration) {
      * Client for interacting with the mock server.
      */
     client(clientConfig: ClientConfiguration) {
-      function encode(request: TPayload) {
+      function encode(request: TPayload | TIdentifiers) {
         return encodeURIComponent(JSON.stringify(request));
       }
 
       return {
         /**
-         * Send a new mock to the server.
+         * Adds a new request mock, or updates an existing one.
          */
-        set(payload: TPayload) {
+        setMock(payload: TPayload) {
           return clientConfig.request({
-            url: clientConfig.address + setUrl + encode(payload),
+            url: clientConfig.address + setMockUrl + encode(payload),
             method: "POST",
           });
         },
 
         /**
-         * Returns all mocks.
+         * Returns all request mocks.
          */
-        getAll() {
+        getAllMocks() {
           return clientConfig.request({
-            url: clientConfig.address + getAllUrl,
+            url: clientConfig.address + getAllMocksUrl,
+            method: "GET",
+          });
+        },
+
+        /**
+         * Returns the latest history value for a request.
+         */
+        getLatestHistory(payload: TIdentifiers) {
+          return clientConfig.request({
+            url: clientConfig.address + getLatestHistoryUrl + encode(payload),
             method: "GET",
           });
         },
