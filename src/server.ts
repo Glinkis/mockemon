@@ -85,7 +85,8 @@ export function configureMockServer<TPayload>(config: Configuration) {
          */
         resolveRealApiRequest(args: GetMockedValueArgs) {
           const url = args.url.slice(config.realApiUrl.length);
-          return store.get(args.getKey(url));
+          const key = args.getKey(url);
+          return store.get(key);
         },
 
         /**
@@ -98,7 +99,9 @@ export function configureMockServer<TPayload>(config: Configuration) {
 
           if (args.url.startsWith(setUrl)) {
             const decoded = decode(args.url.slice(setUrl.length));
-            store.set(args.getKey(decoded), args.getValue(decoded));
+            const key = args.getKey(decoded);
+            const value = args.getValue(decoded);
+            store.set(key, value);
             return;
           }
         },
