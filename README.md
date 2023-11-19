@@ -205,10 +205,13 @@ const app = express();
 // This way we don't have to type them out again, and have a single source of truth.
 const server = mockServer.server();
 
+app.use(express.json());
+
 app.all(server.realApiUrl + "*", (req, res) => {
   const result = server.resolveRealApiRequest({
     url: req.originalUrl,
     getKey: (path) => `${req.method} ${path}`,
+    getValue: () => req.body,
   });
   res.json(result);
 });
@@ -255,7 +258,7 @@ Now we can start creating mocks.
 import { client } from "./client";
 
 // Since we've already provided the shape of the payload in the initial configuration, we get some nice intellisense here.
-client.set({
+client.setMock({
   path: "/animals/cat",
   method: "GET",
   body: {

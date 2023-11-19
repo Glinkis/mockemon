@@ -2,13 +2,16 @@ import http from "node:http";
 import { expect, it } from "bun:test";
 import { configureMockServer } from "../src/server";
 
-interface RequestMock {
+interface RequestIdentity {
   path: string;
   method: string;
+}
+
+interface Payload extends RequestIdentity {
   body: Record<string, unknown>;
 }
 
-const config = configureMockServer<RequestMock>({
+const config = configureMockServer<Payload, RequestIdentity>({
   realApiUrl: "/api",
   mockApiUrl: "/mock",
 });
@@ -16,11 +19,22 @@ const config = configureMockServer<RequestMock>({
 const server = config.server();
 
 http
-  .createServer((req, res) => {
+  .createServer(async (req, res) => {
     if (req.url?.startsWith(server.realApiUrl)) {
+      const body = await new Promise((resolve, reject) => {
+        let result = "";
+        req.on("data", (chunk) => {
+          result += chunk;
+        });
+        req.on("end", () => {
+          resolve(result);
+        });
+      });
+
       const result = server.resolveRealApiRequest({
         url: req.url,
         getKey: (path) => `${req.method} ${path}`,
+        getValue: () => body,
       });
       res.end(JSON.stringify(result));
     }
@@ -46,17 +60,15 @@ const client = config.client({
 });
 
 it("can configure a server with http", async () => {
-  const mock1: RequestMock = {
+  await client.setMock({
     path: "/some/url",
     method: "GET",
     body: {
       foo: "foo",
     },
-  };
+  });
 
-  await client.set(mock1);
-
-  await client.set({
+  await client.setMock({
     path: "/some/other/url",
     method: "POST",
     body: {
@@ -64,7 +76,7 @@ it("can configure a server with http", async () => {
     },
   });
 
-  expect(await client.getAll()).toStrictEqual({
+  expect(await client.getAllMocks()).toStrictEqual({
     "GET /some/url": {
       foo: "foo",
     },
