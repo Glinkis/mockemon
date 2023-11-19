@@ -21,13 +21,17 @@ const server = config.server();
 http
   .createServer(async (req, res) => {
     if (req.url?.startsWith(server.realApiUrl)) {
-      const body = await new Promise((resolve, reject) => {
+      const body = await new Promise<void | string>((resolve, reject) => {
         let result = "";
         req.on("data", (chunk) => {
           result += chunk;
         });
         req.on("end", () => {
-          resolve(result);
+          if (result) {
+            resolve(JSON.parse(result));
+            return;
+          }
+          resolve();
         });
       });
 
@@ -44,6 +48,7 @@ http
         getKey: (payload) => `${payload.method} ${payload.path}`,
         getValue: (payload) => payload.body,
       });
+
       res.end(JSON.stringify(result));
     }
   })
@@ -95,9 +100,21 @@ it("can configure a server with http", async () => {
 
   const mockedPost = await fetch("http://localhost:4001/api/some/other/url", {
     method: "POST",
+    body: JSON.stringify({
+      bar: "bar baz bax",
+    }),
   });
 
   expect(await mockedPost.json()).toStrictEqual({
     bar: "bar",
+  });
+
+  const latestHistory = await client.getLatestHistory({
+    path: "/some/other/url",
+    method: "POST",
+  });
+
+  expect(latestHistory).toStrictEqual({
+    bar: "bar baz bax",
   });
 });
