@@ -51,7 +51,7 @@ export function configureMockServer<TPayload, TIdentifiers>(config: Configuratio
         return JSON.parse(decodeURIComponent(url));
       }
 
-      interface GetMockedValueArgs {
+      type GetMockedValueArgs = {
         /**
          * The full url path of the request.
          */
@@ -63,9 +63,9 @@ export function configureMockServer<TPayload, TIdentifiers>(config: Configuratio
          */
         getKey: (path: string) => string;
         getValue?: (path: string) => unknown;
-      }
+      };
 
-      interface ResolveMockRequestArgs {
+      type ResolveMockRequestArgs = {
         /**
          * The full url path of the request.
          */
@@ -77,7 +77,7 @@ export function configureMockServer<TPayload, TIdentifiers>(config: Configuratio
          */
         getKey: (payload: TPayload) => string;
         getValue: (payload: TPayload) => unknown;
-      }
+      };
 
       return {
         realApiUrl: config.realApiUrl,
