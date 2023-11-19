@@ -117,7 +117,6 @@ export function configureMockServer<TPayload, TIdentifiers>(config: Configuratio
           if (args.url.startsWith(getLatestHistoryUrl)) {
             const decoded = decode(args.url.slice(getLatestHistoryUrl.length));
             const key = args.getKey(decoded);
-            console.log(key, history.get(key));
             return history.get(key);
           }
         },
