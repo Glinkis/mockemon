@@ -1,5 +1,10 @@
 # Changelog
 
+## v3.1.0
+
+- Added an alpha version of `configureMockServer`.
+- Added `configureMockServer` to the readme.
+
 ## v3.0.0
 
 - Renamed the `faker` option to `context`, as it can be any value.
