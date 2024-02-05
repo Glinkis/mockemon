@@ -7,7 +7,7 @@
     "moduleDetection": "force",
     "moduleResolution": "Bundler",
     "forceConsistentCasingInFileNames": true,
-    "types": ["bun-types"],
+    "types": ["bun"],
     "skipLibCheck": true,
     "strict": true,
     "strictNullChecks": true,
