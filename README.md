@@ -138,7 +138,7 @@ interface PetOwner extends Person {
   pet: string;
 }
 
-const buildPetOwner = createMockBuilder(buildPerson
+const buildPetOwner = createMockBuilder(
   (f): PetOwner => ({
     ...buildPerson(),
     pet: f.animal.cat(),
