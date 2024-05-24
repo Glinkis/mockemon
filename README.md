@@ -7,13 +7,13 @@
 
 ---
 
-[version-badge]: https://img.shields.io/npm/v/mockemon.svg?style=flat-square
-[downloads-badge]: https://img.shields.io/npm/dm/mockemon.svg?style=flat-square
-[package]: https://www.npmjs.com/package/mockemon
+[jsrpackage]: https://jsr.io/@glinkis/mockemon
+[npmpackage]: https://www.npmjs.com/package/mockemon
 [npmtrends]: http://www.npmtrends.com/mockemon
 
-[![version][version-badge]][package]
-[![downloads][downloads-badge]][npmtrends]
+[![jsr-version](https://img.shields.io/jsr/v/@glinkis/mockemon)][jsrpackage]
+[![version](https://img.shields.io/npm/v/mockemon)][npmpackage]
+[![downloads](https://img.shields.io/npm/dm/mockemon)][npmtrends]
 
 ## Installation
 
