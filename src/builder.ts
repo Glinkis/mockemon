@@ -13,23 +13,27 @@ type Overrideable<TValue> = {
   readonly [P in keyof TValue]?: TValue[P];
 };
 
+type Build<TContext, TValue> = (config: TContext) => TValue;
+
+type Override<TContext, TOverrides> = Build<TContext, TOverrides> | TOverrides;
+
+type CreateMockBuilder<TConfig extends Configuration, TContext = TConfig["context"]> = {
+  <TValue>(build: Build<TContext, TValue>): {
+    (): TValue;
+    <TOverrides extends Overrideable<TValue>>(override: Override<TContext, TOverrides>): TValue & TOverrides;
+  };
+};
+
 /**
  * Configures and returns a mock builder function.
- *
- * @param config
- * @returns
  */
-export function configureMockBuilder<TConfig extends Configuration>(config: TConfig) {
-  type Build<TValue> = (faker: TConfig["context"]) => TValue;
+export function configureMockBuilder<TConfig extends Configuration>(config: TConfig): CreateMockBuilder<TConfig> {
+  type TContext = TConfig["context"];
 
-  type Override<TOverrides> = Build<TOverrides> | TOverrides;
+  function createMockBuilder<TValue>(build: Build<TContext, TValue>) {
+    type TOverrideable = Overrideable<TValue>;
 
-  function createMockBuilder<TValue>(build: Build<TValue>) {
-    function buildMock(): TValue;
-
-    function buildMock<TOverrides extends Overrideable<TValue>>(override: Override<TOverrides>): TValue & TOverrides;
-
-    function buildMock<TOverrides extends Overrideable<TValue>>(override?: Override<TOverrides>) {
+    function buildMock<TOverrides extends TOverrideable>(override?: Override<TContext, TOverrides>) {
       const original = build(config.context);
 
       // Unwrap the override if it's a function.
