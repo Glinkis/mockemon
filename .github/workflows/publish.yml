@@ -20,4 +20,4 @@ jobs:
           bun-version: latest
 
       - uses: actions/checkout@v4
-      - run: bunx jsr publish --provenance
+      - run: bunx jsr publish
