@@ -99,12 +99,8 @@ it("can override primitives with objects", () => {
     pet: "Cat",
   });
 
-  // FIXME: This should work with an equality check.
-  expectTypeOf(mock1).toMatchTypeOf<PetOwner>();
-  expectTypeOf(mock2).toMatchTypeOf<PetOwner>();
-
-  expectTypeOf(mock1).not.toMatchTypeOf<string>();
-  expectTypeOf(mock2).not.toMatchTypeOf<string>();
+  expectTypeOf(mock1).toEqualTypeOf<PetOwner>();
+  expectTypeOf(mock2).toEqualTypeOf<PetOwner>();
 });
 
 it("can override primitives with 'null'", () => {
@@ -151,8 +147,8 @@ it("can override objects", () => {
     pet: "Parrot",
   });
 
-  expectTypeOf(mock1).branded.toEqualTypeOf<PetOwner>();
-  expectTypeOf(mock2).branded.toEqualTypeOf<PetOwner>();
+  expectTypeOf(mock1).toEqualTypeOf<PetOwner>();
+  expectTypeOf(mock2).toEqualTypeOf<PetOwner>();
 });
 
 it("can override objects with primitives", () => {
@@ -167,8 +163,8 @@ it("can override objects with primitives", () => {
   expect(mock1).toEqual("Rafael");
   expect(mock2).toEqual("Rafael");
 
-  expectTypeOf(mock1).branded.toEqualTypeOf<"Rafael">();
-  expectTypeOf(mock2).branded.toEqualTypeOf<"Rafael">();
+  expectTypeOf(mock1).toEqualTypeOf<"Rafael">();
+  expectTypeOf(mock2).toEqualTypeOf<"Rafael">();
 });
 
 it("can override objects with 'null'", () => {
@@ -225,8 +221,8 @@ it("can override arrays with primitives", () => {
   expect(mock1).toEqual("Rafael");
   expect(mock2).toEqual("Rafael");
 
-  expectTypeOf(mock1).branded.toEqualTypeOf<"Rafael">();
-  expectTypeOf(mock2).branded.toEqualTypeOf<"Rafael">();
+  expectTypeOf(mock1).toEqualTypeOf<"Rafael">();
+  expectTypeOf(mock2).toEqualTypeOf<"Rafael">();
 });
 
 it("can override arrays with 'null'", () => {

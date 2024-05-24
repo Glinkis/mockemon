@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.1.0
+
+- Improved the final result type when passing overrides.
+
 ## v4.0.0
 
 - Removed the mock server API. [MSW](https://mswjs.io/) is a better alternative for this use case now that it supports intercepting backend requests.
