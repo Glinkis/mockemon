@@ -25,7 +25,7 @@ type CreateMockBuilder<TConfig extends Configuration, TContext = TConfig["contex
 };
 
 /**
- * Configures and returns a mock builder function.
+ * Configures and returns a factory for mock builders.
  */
 export function configureMockBuilder<TConfig extends Configuration>(config: TConfig): CreateMockBuilder<TConfig> {
   type TContext = TConfig["context"];
