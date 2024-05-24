@@ -5,5 +5,7 @@
   "exports": {
     "./builder": "./src/builder.ts"
   },
-  "include": ["LICENSE", "README.md", "src/**/*"]
+  "publish": {
+    "include": ["LICENSE", "README.md", "src/**/*"]
+  }
 }
