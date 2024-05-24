@@ -13,6 +13,12 @@ type Overrideable<TValue> = {
   readonly [P in keyof TValue]?: TValue[P];
 };
 
+/**
+ * Configures and returns a mock builder function.
+ *
+ * @param config
+ * @returns
+ */
 export function configureMockBuilder<TConfig extends Configuration>(config: TConfig) {
   type Build<TValue> = (faker: TConfig["context"]) => TValue;
 
