@@ -31,6 +31,23 @@ type CreateMockBuilder<TConfig extends Configuration, TContext = TConfig["contex
 
 /**
  * Configures and returns a factory for mock builders.
+ *
+ * @example
+ * ```ts
+ * import { configureMockBuilder } from "./builder";
+ *
+ * const createMockBuilder = configureMockBuilder({
+ *  context: {},
+ * });
+ *
+ * const buildMock = createMockBuilder(() => ({
+ *  name: "John Doe",
+ * }));
+ *
+ * const mock = buildMock();
+ *
+ * console.log(mock); // { name: "John Doe" }
+ * ```
  */
 export function configureMockBuilder<TConfig extends Configuration>(config: TConfig): CreateMockBuilder<TConfig> {
   type TContext = TConfig["context"];
