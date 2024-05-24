@@ -1,4 +1,9 @@
 /**
+ * This module provides a function that creates a factory for mock builders.
+ * @module
+ */
+
+/**
  * A configuration object that is passed to the `configureMockBuilder` function.
  */
 interface Configuration {
