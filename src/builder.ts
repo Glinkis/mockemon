@@ -18,6 +18,8 @@ type Overrideable<TValue> = {
   readonly [P in keyof TValue]?: TValue[P];
 };
 
+type Build<TContext, TValue> = (config: TContext) => TValue;
+
 type Merged<TValue, TOverride> =
   // If the overrides are identical to the value.
   TValue extends TOverride
@@ -31,8 +33,8 @@ type Merged<TValue, TOverride> =
         never;
 
 type CreateMockBuilder<TConfig extends Configuration, TContext = TConfig["context"]> = {
-  <TValue>(build: (config: TContext) => TValue): {
-    <TOverride extends Overrideable<TValue>>(override: (config: TContext) => TOverride): Merged<TValue, TOverride>;
+  <TValue>(build: Build<TContext, TValue>): {
+    <TOverride extends Overrideable<TValue>>(override: Build<TContext, TOverride>): Merged<TValue, TOverride>;
     <TOverride extends Overrideable<TValue>>(override: TOverride): Merged<TValue, TOverride>;
     (): TValue;
   };
@@ -64,7 +66,7 @@ export function configureMockBuilder<TConfig extends Configuration>(config: TCon
   function createMockBuilder<TValue>(build: Build<TContext, TValue>) {
     type TOverrideable = Overrideable<TValue>;
 
-    function buildMock<TOverride extends TOverrideable>(override?: Override<TContext, TOverride>) {
+    function buildMock<TOverride extends TOverrideable>(override?: Build<TContext, TOverride> | TOverride) {
       const original = build(config.context);
 
       // Unwrap the override if it's a function.
