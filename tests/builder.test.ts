@@ -120,9 +120,9 @@ it("can override primitives with 'undefined'", () => {
   const buildMock = createMockBuilder<string | undefined>((f) => f.name());
 
   const mock1 = buildMock(undefined);
-  expect(mock1).toBeUndefined();
-
   const mock2 = buildMock(() => undefined);
+
+  expect(mock1).toBeUndefined();
   expect(mock2).toBeUndefined();
 
   expectTypeOf(mock1).toEqualTypeOf<undefined>();
