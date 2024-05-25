@@ -20,24 +20,24 @@ type Overrideable<TValue> = {
 
 type Build<TContext, TValue> = (config: TContext) => TValue;
 
-type Override<TContext, TOverrides> = Build<TContext, TOverrides> | TOverrides;
+type Override<TContext, TOverride> = Build<TContext, TOverride> | TOverride;
 
-type Merged<TValue, TOverrides> =
+type Merged<TValue, TOverride> =
   // If the overrides are identical to the value.
-  TValue extends TOverrides
+  TValue extends TOverride
     ? // Just use the value.
       TValue
     : // If the overrides are a subset of the value.
-      keyof TOverrides extends keyof TValue
+      keyof TOverride extends keyof TValue
       ? // We need to merge in the overrides
-        TValue & TOverrides
+        TValue & TOverride
       : // If the overrides don't match the value at all, it's invalid.
         never;
 
 type CreateMockBuilder<TConfig extends Configuration, TContext = TConfig["context"]> = {
   <TValue>(build: Build<TContext, TValue>): {
     (): TValue;
-    <TOverrides extends Overrideable<TValue>>(override: Override<TContext, TOverrides>): Merged<TValue, TOverrides>;
+    <TOverride extends Overrideable<TValue>>(override: Override<TContext, TOverride>): Merged<TValue, TOverride>;
   };
 };
 
@@ -67,7 +67,7 @@ export function configureMockBuilder<TConfig extends Configuration>(config: TCon
   function createMockBuilder<TValue>(build: Build<TContext, TValue>) {
     type TOverrideable = Overrideable<TValue>;
 
-    function buildMock<TOverrides extends TOverrideable>(override?: Override<TContext, TOverrides>) {
+    function buildMock<TOverride extends TOverrideable>(override?: Override<TContext, TOverride>) {
       const original = build(config.context);
 
       // Unwrap the override if it's a function.
