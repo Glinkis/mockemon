@@ -18,10 +18,6 @@ type Overrideable<TValue> = {
   readonly [P in keyof TValue]?: TValue[P];
 };
 
-type Build<TContext, TValue> = (config: TContext) => TValue;
-
-type Override<TContext, TOverride> = Build<TContext, TOverride> | TOverride;
-
 type Merged<TValue, TOverride> =
   // If the overrides are identical to the value.
   TValue extends TOverride
@@ -35,9 +31,10 @@ type Merged<TValue, TOverride> =
         never;
 
 type CreateMockBuilder<TConfig extends Configuration, TContext = TConfig["context"]> = {
-  <TValue>(build: Build<TContext, TValue>): {
+  <TValue>(build: (config: TContext) => TValue): {
+    <TOverride extends Overrideable<TValue>>(override: (config: TContext) => TOverride): Merged<TValue, TOverride>;
+    <TOverride extends Overrideable<TValue>>(override: TOverride): Merged<TValue, TOverride>;
     (): TValue;
-    <TOverride extends Overrideable<TValue>>(override: Override<TContext, TOverride>): Merged<TValue, TOverride>;
   };
 };
 
