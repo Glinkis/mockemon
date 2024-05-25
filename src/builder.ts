@@ -28,7 +28,7 @@ type Merged<TValue, TOverride> =
     ? // Just use the value.
       TValue
     : // If the overrides are a subset of the value.
-      keyof TOverride extends keyof TValue
+      keyof TValue extends keyof TOverride
       ? // We need to merge in the overrides
         TValue & TOverride
       : // If the overrides don't match the value at all, it's invalid.
