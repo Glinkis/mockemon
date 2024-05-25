@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.1.2
+
+- Further improved the final result type when passing overrides.
+
 ## v4.1.0
 
 - Improved the final result type when passing overrides.
