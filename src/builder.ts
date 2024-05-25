@@ -34,8 +34,12 @@ type Merged<TValue, TOverride> =
 
 type CreateMockBuilder<TConfig extends Configuration, TContext = TConfig["context"]> = {
   <TValue>(build: Build<TContext, TValue>): {
-    <TOverride extends Overrideable<TValue>>(override: Build<TContext, TOverride>): Merged<TValue, TOverride>;
-    <TOverride extends Overrideable<TValue>>(override: TOverride): Merged<TValue, TOverride>;
+    <TOverride extends Overrideable<TValue>>(
+      override: Build<TContext, TValue extends TOverride ? TOverride : TValue>,
+    ): Merged<TValue, TOverride>;
+    <TOverride extends Overrideable<TValue>>( //
+      override: TValue extends TOverride ? TOverride : TValue,
+    ): Merged<TValue, TOverride>;
     (): TValue;
   };
 };
