@@ -20,7 +20,7 @@ type Overrideable<TValue> = {
 
 type Build<TContext, TValue> = (config: TContext) => TValue;
 
-type Shape<TValue, TOverride extends Overrideable<TValue>> = TValue extends TOverride ? TOverride : TValue;
+type Shape<TValue, TOverride> = TValue extends TOverride ? TOverride : TValue;
 
 type Merged<TValue, TOverride> =
   // If the overrides are identical to the value.
