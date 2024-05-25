@@ -23,16 +23,16 @@ type Build<TContext, TValue> = (config: TContext) => TValue;
 type Override<TContext, TOverrides> = Build<TContext, TOverrides> | TOverrides;
 
 type Merged<TValue, TOverrides> =
-  // If the overrides are a subset of the value.
-  keyof TOverrides extends keyof TValue
-    ? // If the override is identical to the value
-      TValue extends TOverrides
-      ? // No need to modify the type, since the override is identical to the value.
-        TValue
-      : // The override is stricter than the value, so we need to merge them.
+  // If the overrides are identical to the value.
+  TValue extends TOverrides
+    ? // Just use the value.
+      TValue
+    : // If the overrides are a subset of the value.
+      keyof TOverrides extends keyof TValue
+      ? // We need to merge in the overrides
         TValue & TOverrides
-    : // The overrides are a stricter version of the value, so just use the overrides.
-      TOverrides;
+      : // If the overrides don't match the value at all, it's invalid.
+        never;
 
 type CreateMockBuilder<TConfig extends Configuration, TContext = TConfig["context"]> = {
   <TValue>(build: Build<TContext, TValue>): {
