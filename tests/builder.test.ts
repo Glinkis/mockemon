@@ -136,12 +136,12 @@ it("can override objects", () => {
   }));
 
   const mock1 = buildMock({ name: "Rafael" });
+  const mock2 = buildMock(() => ({ pet: "Parrot" }));
+
   expect(mock1).toEqual({
     name: "Rafael",
     pet: "Dog",
   });
-
-  const mock2 = buildMock(() => ({ pet: "Parrot" }));
   expect(mock2).toEqual({
     name: "Gustavo",
     pet: "Parrot",
