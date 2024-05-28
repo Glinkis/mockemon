@@ -5,8 +5,6 @@
 
 </div>
 
----
-
 [jsrpackage]: https://jsr.io/@glinkis/mockemon
 [npmpackage]: https://www.npmjs.com/package/mockemon
 [npmtrends]: http://www.npmtrends.com/mockemon
@@ -30,8 +28,6 @@ yarn add mockemon
 ```sh
 bun add mockemon
 ```
-
----
 
 ## The Mock Builder
 
