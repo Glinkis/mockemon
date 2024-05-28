@@ -1,6 +1,6 @@
 import { afterAll, describe, it } from "bun:test";
 import { RuleTester } from "@typescript-eslint/rule-tester";
-import { rule } from "./explicit-return-type";
+import { explicitReturnType } from "./explicit-return-type";
 
 RuleTester.it = it;
 RuleTester.describe = describe;
@@ -8,7 +8,7 @@ RuleTester.afterAll = afterAll;
 
 const ruleTester = new RuleTester();
 
-ruleTester.run("explicit-return-type", rule, {
+ruleTester.run("explicit-return-type", explicitReturnType, {
   valid: [
     {
       code: `

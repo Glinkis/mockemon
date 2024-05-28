@@ -2,7 +2,7 @@ import { ESLintUtils } from "@typescript-eslint/utils";
 
 const createRule = ESLintUtils.RuleCreator((name) => name);
 
-export const rule = createRule({
+export const explicitReturnType = createRule({
   name: "explicit-return-type",
   meta: {
     docs: {
