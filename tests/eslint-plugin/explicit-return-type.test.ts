@@ -1,6 +1,6 @@
 import { afterAll, describe, it } from "bun:test";
 import { RuleTester } from "@typescript-eslint/rule-tester";
-import { explicitReturnType } from "./explicit-return-type";
+import { explicitReturnType } from "../../src/eslint-plugin/explicit-return-type";
 
 RuleTester.it = it;
 RuleTester.describe = describe;
