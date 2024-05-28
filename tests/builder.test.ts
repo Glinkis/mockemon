@@ -1,4 +1,4 @@
-import { expect, it } from "bun:test";
+import { expect, it, describe } from "bun:test";
 import { expectTypeOf } from "expect-type";
 import { configureMockBuilder } from "../src/builder.js";
 
@@ -385,4 +385,32 @@ it("can override 'undefined' with 'null'", () => {
 
   expectTypeOf(mock1).toEqualTypeOf<null>();
   expectTypeOf(mock2).toEqualTypeOf<null>();
+});
+
+describe("validation", () => {
+  it("should warn if passing an incomplete override when using incompatible types", () => {
+    type Shape1 = { a: string; b: string };
+    const build1 = createMockBuilder<Shape1 | null>(() => null);
+
+    // @ts-expect-error - Missing 'a' property.
+    build1({ a: "a" });
+    // @ts-expect-error - Missing 'b' property.
+    build1(() => ({ b: "b" }));
+
+    type Shape2 = { c: string };
+    const build2 = createMockBuilder<Shape1 | Shape2>(() => ({ c: "c" }));
+
+    // @ts-expect-error - Missing 'a' property.
+    build2({ a: "a" });
+    // @ts-expect-error - Missing 'b' property.
+    build2(() => ({ b: "b" }));
+
+    type Tuple2 = [number, number];
+    const build3 = createMockBuilder<Tuple2 | null>(() => null);
+
+    // @ts-expect-error - Missing second element.
+    build3([1]);
+    // @ts-expect-error - Missing first element.
+    build3(() => [, 1]);
+  });
 });
