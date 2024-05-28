@@ -12,6 +12,11 @@
       "types": "./dist/builder.d.ts",
       "require": "./dist/builder.cjs",
       "default": "./dist/builder.js"
+    },
+    "./eslint-plugin": {
+      "types": "./dist/eslint-plugin/index.d.ts",
+      "require": "./dist/eslint-plugin/index.cjs",
+      "default": "./dist/eslint-plugin/index.js"
     }
   },
   "scripts": {

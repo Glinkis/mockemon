@@ -3,7 +3,8 @@
   "name": "@glinkis/mockemon",
   "version": "4.2.1",
   "exports": {
-    "./builder": "./src/builder.ts"
+    "./builder": "./src/builder.ts",
+    "./eslint-plugin": "./src/eslint-plugin/index.ts"
   },
   "publish": {
     "include": ["LICENSE", "README.md", "src/**/*"]
