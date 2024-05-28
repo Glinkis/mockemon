@@ -20,13 +20,13 @@ type Overrideable<TValue> = {
 
 type Build<TContext, TValue> = (config: TContext) => TValue;
 
-type Shape<TValue, TOverride> = //
+type BuildInput<TValue, TOverride> = //
   // If the override is a subset of a compatible set of the original value.
   Exclude<TValue, TOverride> extends Extract<TValue, TOverride> //
     ? TOverride
     : TValue;
 
-type Merged<TValue, TOverride> =
+type BuildOutput<TValue, TOverride> =
   // If the overrides are identical to the value.
   TValue extends TOverride
     ? // Just use the value.
@@ -41,12 +41,12 @@ type Merged<TValue, TOverride> =
 type CreateMockBuilder<TConfig extends Configuration, TContext = TConfig["context"]> = {
   <TValue>(build: Build<TContext, TValue>): {
     <TOverride extends Overrideable<TValue>>(
-      override: Build<TContext, Shape<TValue, TOverride>>,
-    ): Merged<TValue, TOverride>;
+      override: Build<TContext, BuildInput<TValue, TOverride>>,
+    ): BuildOutput<TValue, TOverride>;
 
     <TOverride extends Overrideable<TValue>>( //
-      override: Shape<TValue, TOverride>,
-    ): Merged<TValue, TOverride>;
+      override: BuildInput<TValue, TOverride>,
+    ): BuildOutput<TValue, TOverride>;
 
     (): TValue;
   };
