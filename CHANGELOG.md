@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.2.0
+
+- Improved the type inferrence of the override when the original type is a union.
+
 ## v4.1.2
 
 - Further improved the final result type when passing overrides.
