@@ -26,10 +26,12 @@ it("can mock primitives", () => {
 });
 
 it("can mock objects", () => {
-  const buildMock = createMockBuilder<PetOwner>((f) => ({
-    name: f.name(),
-    pet: f.pet(),
-  }));
+  const buildMock = createMockBuilder(
+    (f): PetOwner => ({
+      name: f.name(),
+      pet: f.pet(),
+    }),
+  );
 
   const mock = buildMock();
 
@@ -52,7 +54,7 @@ it("can mock arrays", () => {
 });
 
 it("can mock 'null'", () => {
-  const buildMock = createMockBuilder<null>(() => null);
+  const buildMock = createMockBuilder((): null => null);
 
   const mock = buildMock();
 
@@ -62,7 +64,7 @@ it("can mock 'null'", () => {
 });
 
 it("can mock 'undefined'", () => {
-  const buildMock = createMockBuilder<undefined>(() => undefined);
+  const buildMock = createMockBuilder((): undefined => undefined);
 
   const mock = buildMock();
 
@@ -72,7 +74,7 @@ it("can mock 'undefined'", () => {
 });
 
 it("can override primitives", () => {
-  const buildMock = createMockBuilder<string | null | undefined>((f) => f.name());
+  const buildMock = createMockBuilder((f): string | null | undefined => f.name());
 
   const mock1 = buildMock("Parrot");
   const mock2 = buildMock(() => "Parrot");
@@ -85,7 +87,7 @@ it("can override primitives", () => {
 });
 
 it("can override primitives with objects", () => {
-  const buildMock = createMockBuilder<string | PetOwner>((f) => f.name());
+  const buildMock = createMockBuilder((f): string | PetOwner => f.name());
 
   const mock1 = buildMock({ name: "Rafael", pet: "Cat" });
   const mock2 = buildMock(() => ({ name: "Rafael", pet: "Cat" }));
@@ -104,7 +106,7 @@ it("can override primitives with objects", () => {
 });
 
 it("can override primitives with 'null'", () => {
-  const buildMock = createMockBuilder<string | null>((f) => f.name());
+  const buildMock = createMockBuilder((f): string | null => f.name());
 
   const mock1 = buildMock(null);
   const mock2 = buildMock(() => null);
@@ -117,7 +119,7 @@ it("can override primitives with 'null'", () => {
 });
 
 it("can override primitives with 'undefined'", () => {
-  const buildMock = createMockBuilder<string | undefined>((f) => f.name());
+  const buildMock = createMockBuilder((f): string | undefined => f.name());
 
   const mock1 = buildMock(undefined);
   const mock2 = buildMock(() => undefined);
@@ -130,10 +132,12 @@ it("can override primitives with 'undefined'", () => {
 });
 
 it("can override objects", () => {
-  const buildMock = createMockBuilder<PetOwner>((f) => ({
-    name: f.name(),
-    pet: f.pet(),
-  }));
+  const buildMock = createMockBuilder(
+    (f): PetOwner => ({
+      name: f.name(),
+      pet: f.pet(),
+    }),
+  );
 
   const mock1 = buildMock({ name: "Rafael" });
   const mock2 = buildMock(() => ({ pet: "Parrot" }));
@@ -152,7 +156,7 @@ it("can override objects", () => {
 });
 
 it("can override objects with primitives", () => {
-  const buildMock = createMockBuilder<string | PetOwner>((f) => ({
+  const buildMock = createMockBuilder((f): string | PetOwner => ({
     name: f.name(),
     pet: f.pet(),
   }));
@@ -168,7 +172,7 @@ it("can override objects with primitives", () => {
 });
 
 it("can override objects with 'null'", () => {
-  const buildMock = createMockBuilder<PetOwner | null>((f) => ({
+  const buildMock = createMockBuilder((f): PetOwner | null => ({
     name: f.name(),
     pet: f.pet(),
   }));
@@ -184,7 +188,7 @@ it("can override objects with 'null'", () => {
 });
 
 it("can override objects with 'undefined'", () => {
-  const buildMock = createMockBuilder<PetOwner | undefined>((f) => ({
+  const buildMock = createMockBuilder((f): PetOwner | undefined => ({
     name: f.name(),
     pet: f.pet(),
   }));
@@ -200,7 +204,7 @@ it("can override objects with 'undefined'", () => {
 });
 
 it("can override arrays", () => {
-  const buildMock = createMockBuilder<number[]>((f) => f.numbers());
+  const buildMock = createMockBuilder((f): number[] => f.numbers());
 
   const mock1 = buildMock([4, 5, 6]);
   const mock2 = buildMock(() => [4, 5, 6]);
@@ -213,7 +217,7 @@ it("can override arrays", () => {
 });
 
 it("can override arrays with primitives", () => {
-  const buildMock = createMockBuilder<number[] | string>((f) => f.numbers());
+  const buildMock = createMockBuilder((f): number[] | string => f.numbers());
 
   const mock1 = buildMock("Rafael");
   const mock2 = buildMock(() => "Rafael");
@@ -226,7 +230,7 @@ it("can override arrays with primitives", () => {
 });
 
 it("can override arrays with 'null'", () => {
-  const buildMock = createMockBuilder<number[] | null>((f) => f.numbers());
+  const buildMock = createMockBuilder((f): number[] | null => f.numbers());
 
   const mock1 = buildMock(null);
   const mock2 = buildMock(() => null);
@@ -239,7 +243,7 @@ it("can override arrays with 'null'", () => {
 });
 
 it("can override arrays with 'undefined'", () => {
-  const buildMock = createMockBuilder<number[] | undefined>((f) => f.numbers());
+  const buildMock = createMockBuilder((f): number[] | undefined => f.numbers());
 
   const mock1 = buildMock(undefined);
   const mock2 = buildMock(() => undefined);
@@ -252,7 +256,7 @@ it("can override arrays with 'undefined'", () => {
 });
 
 it("can override 'null'", () => {
-  const buildMock = createMockBuilder<null>(() => null);
+  const buildMock = createMockBuilder((): null => null);
 
   const mock1 = buildMock(null);
   const mock2 = buildMock(() => null);
@@ -265,7 +269,7 @@ it("can override 'null'", () => {
 });
 
 it("can override 'undefined'", () => {
-  const buildMock = createMockBuilder<undefined>(() => undefined);
+  const buildMock = createMockBuilder((): undefined => undefined);
 
   const mock1 = buildMock(undefined);
   const mock2 = buildMock(() => undefined);
@@ -278,7 +282,7 @@ it("can override 'undefined'", () => {
 });
 
 it("can override 'null' with primitives", () => {
-  const buildMock = createMockBuilder<null | string>(() => null);
+  const buildMock = createMockBuilder((): null | string => null);
 
   const mock1 = buildMock("Rafael");
   const mock2 = buildMock(() => "Rafael");
@@ -291,7 +295,7 @@ it("can override 'null' with primitives", () => {
 });
 
 it("can override 'null' with objects", () => {
-  const buildMock = createMockBuilder<null | PetOwner>(() => null);
+  const buildMock = createMockBuilder((): null | PetOwner => null);
 
   const mock1 = buildMock({ name: "Rafael", pet: "Cat" });
   const mock2 = buildMock(() => ({ name: "Rafael", pet: "Cat" }));
@@ -310,7 +314,7 @@ it("can override 'null' with objects", () => {
 });
 
 it("can override 'null' with arrays", () => {
-  const buildMock = createMockBuilder<null | number[]>(() => null);
+  const buildMock = createMockBuilder((): null | number[] => null);
 
   const mock1 = buildMock([4, 5, 6]);
   const mock2 = buildMock(() => [4, 5, 6]);
@@ -323,7 +327,7 @@ it("can override 'null' with arrays", () => {
 });
 
 it("can override 'undefined' with primitives", () => {
-  const buildMock = createMockBuilder<undefined | string>(() => undefined);
+  const buildMock = createMockBuilder((): undefined | string => undefined);
 
   const mock1 = buildMock("Rafael");
   const mock2 = buildMock(() => "Rafael");
@@ -336,7 +340,7 @@ it("can override 'undefined' with primitives", () => {
 });
 
 it("can override 'undefined' with objects", () => {
-  const buildMock = createMockBuilder<undefined | PetOwner>(() => undefined);
+  const buildMock = createMockBuilder((): undefined | PetOwner => undefined);
 
   const mock1 = buildMock({ name: "Rafael", pet: "Cat" });
   const mock2 = buildMock(() => ({ name: "Rafael", pet: "Cat" }));
@@ -355,7 +359,7 @@ it("can override 'undefined' with objects", () => {
 });
 
 it("can override 'undefined' with arrays", () => {
-  const buildMock = createMockBuilder<undefined | number[]>(() => undefined);
+  const buildMock = createMockBuilder((): undefined | number[] => undefined);
 
   const mock1 = buildMock([4, 5, 6]);
   const mock2 = buildMock(() => [4, 5, 6]);
@@ -368,7 +372,7 @@ it("can override 'undefined' with arrays", () => {
 });
 
 it("can override 'null' with 'undefined'", () => {
-  const buildMock = createMockBuilder<null | undefined>(() => null);
+  const buildMock = createMockBuilder((): null | undefined => null);
 
   const mock1 = buildMock(undefined);
   const mock2 = buildMock(() => undefined);
@@ -381,7 +385,7 @@ it("can override 'null' with 'undefined'", () => {
 });
 
 it("can override 'undefined' with 'null'", () => {
-  const buildMock = createMockBuilder<null | undefined>(() => undefined);
+  const buildMock = createMockBuilder((): null | undefined => undefined);
 
   const mock1 = buildMock(null);
   const mock2 = buildMock(() => null);
@@ -396,7 +400,7 @@ it("can override 'undefined' with 'null'", () => {
 describe("validation", () => {
   it("should warn if passing an incomplete override when using incompatible types", () => {
     type Shape1 = { a: string; b: string };
-    const build1 = createMockBuilder<Shape1 | null>(() => null);
+    const build1 = createMockBuilder((): Shape1 | null => null);
 
     // @ts-expect-error - Missing 'a' property.
     build1({ a: "a" });
@@ -404,7 +408,7 @@ describe("validation", () => {
     build1(() => ({ b: "b" }));
 
     type Shape2 = { c: string };
-    const build2 = createMockBuilder<Shape1 | Shape2>(() => ({ c: "c" }));
+    const build2 = createMockBuilder((): Shape1 | Shape2 => ({ c: "c" }));
 
     // @ts-expect-error - Missing 'a' property.
     build2({ a: "a" });
@@ -412,7 +416,7 @@ describe("validation", () => {
     build2(() => ({ b: "b" }));
 
     type Tuple2 = [number, number];
-    const build3 = createMockBuilder<Tuple2 | null>(() => null);
+    const build3 = createMockBuilder((): Tuple2 | null => null);
 
     // @ts-expect-error - Missing second element.
     build3([1]);
