@@ -325,8 +325,14 @@ it("can override 'null' with arrays", () => {
 it("can override 'undefined' with primitives", () => {
   const buildMock = createMockBuilder<undefined | string>(() => undefined);
 
-  expect(buildMock("Rafael")).toEqual("Rafael");
-  expect(buildMock(() => "Rafael")).toEqual("Rafael");
+  const mock1 = buildMock("Rafael");
+  const mock2 = buildMock(() => "Rafael");
+
+  expect(mock1).toEqual("Rafael");
+  expect(mock2).toEqual("Rafael");
+
+  expectTypeOf(mock1).toEqualTypeOf<"Rafael">();
+  expectTypeOf(mock2).toEqualTypeOf<"Rafael">();
 });
 
 it("can override 'undefined' with objects", () => {
