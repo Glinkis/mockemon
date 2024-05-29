@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.2.2
+
+- Update exports.
+
 ## v4.2.1
 
 - Slightly improve readme.
