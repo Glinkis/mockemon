@@ -1,12 +1,16 @@
 # Changelog
 
+## v4.2.5
+
+- Improved support for objects with union values.
+
 ## v4.2.2
 
-- Update exports.
+- Updated exports.
 
 ## v4.2.1
 
-- Slightly improve readme.
+- Slightly improved readme.
 
 ## v4.2.0
 

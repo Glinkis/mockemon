@@ -155,6 +155,39 @@ it("can override objects", () => {
   expectTypeOf(mock2).toEqualTypeOf<PetOwner>();
 });
 
+it("can override objects with union values", () => {
+  type Message = {
+    type: "A" | "B" | "C";
+    brand: "X" | "Y" | "Z";
+  };
+
+  const buildMock = createMockBuilder(
+    (): Message => ({
+      type: "A",
+      brand: "X",
+    }),
+  );
+
+  const mock1 = buildMock({
+    type: "B",
+  });
+  const mock2 = buildMock(() => ({
+    brand: "X",
+  }));
+
+  expect(mock1).toEqual({
+    type: "B",
+    brand: "X",
+  });
+  expect(mock2).toEqual({
+    type: "A",
+    brand: "X",
+  });
+
+  expectTypeOf(mock1).toEqualTypeOf<Message & { type: "B" }>();
+  expectTypeOf(mock2).toEqualTypeOf<Message & { brand: "X" }>();
+});
+
 it("can override objects with primitives", () => {
   const buildMock = createMockBuilder((f): string | PetOwner => ({
     name: f.name(),
@@ -410,9 +443,9 @@ describe("validation", () => {
     type Shape2 = { c: string };
     const build2 = createMockBuilder((): Shape1 | Shape2 => ({ c: "c" }));
 
-    // @ts-expect-error - Missing 'a' property.
-    build2({ a: "a" });
     // @ts-expect-error - Missing 'b' property.
+    build2({ a: "a" });
+    // @ts-expect-error - Missing 'a' property.
     build2(() => ({ b: "b" }));
 
     type Tuple2 = [number, number];

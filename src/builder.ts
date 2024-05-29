@@ -24,7 +24,10 @@ type BuildInput<TValue, TOverride> = //
   // If the override is a subset of a compatible set of the original value.
   Exclude<TValue, TOverride> extends Extract<TValue, TOverride> //
     ? TOverride
-    : TValue;
+    : // If the override is any subset of the original value.
+      keyof TOverride extends keyof TValue
+      ? TOverride
+      : TValue;
 
 type BuildOutput<TValue, TOverride> =
   // If the overrides are identical to the value.
@@ -35,8 +38,11 @@ type BuildOutput<TValue, TOverride> =
       keyof TValue extends keyof TOverride
       ? // We need to merge in the overrides
         TValue & TOverride
-      : // If the overrides don't match the value at all, it's invalid.
-        never;
+      : // If the overrides are a subset of the value.
+        keyof TOverride extends keyof TValue
+        ? TValue & TOverride
+        : // If the overrides don't match the value at all, it's invalid.
+          never;
 
 type CreateMockBuilder<TConfig extends Configuration, TContext = TConfig["context"]> = {
   <TValue>(build: Build<TContext, TValue>): {
