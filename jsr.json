@@ -1,8 +1,9 @@
 {
   "$schema": "https://jsr.io/schema/config-file.v1.json",
   "name": "@glinkis/mockemon",
-  "version": "4.2.5",
+  "version": "4.2.6",
   "exports": {
+    ".": "./src/index.ts",
     "./builder": "./src/builder.ts"
   },
   "publish": {
