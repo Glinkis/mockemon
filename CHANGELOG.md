@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.2.7
+
+- Optimized type validation logic.
+
 ## v4.2.5
 
 - Improved support for objects with union values.
