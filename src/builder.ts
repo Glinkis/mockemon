@@ -30,19 +30,15 @@ type BuildInput<TValue, TOverride> = //
       : TValue;
 
 type BuildOutput<TValue, TOverride> =
-  // If the overrides are identical to the value.
+  // If the override is identical to the original value.
   TValue extends TOverride
-    ? // Just use the value.
-      TValue
-    : // If the overrides are a subset of the value.
-      keyof TValue extends keyof TOverride
-      ? // We need to merge in the overrides
+    ? TValue
+    : // If the override keys are a subset of the keys in the original value.
+      keyof TOverride extends keyof TValue
+      ? // We need to merge in the overrides.
         TValue & TOverride
-      : // If the overrides are a subset of the value.
-        keyof TOverride extends keyof TValue
-        ? TValue & TOverride
-        : // If the overrides don't match the value at all, it's invalid.
-          never;
+      : // If the overrides don't match the value at all, it's invalid.
+        never;
 
 type CreateMockBuilder<TConfig extends Configuration, TContext = TConfig["context"]> = {
   <TValue>(build: Build<TContext, TValue>): {
