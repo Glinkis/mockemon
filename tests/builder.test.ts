@@ -435,9 +435,9 @@ describe("validation", () => {
     type Shape1 = { a: string; b: string };
     const build1 = createMockBuilder((): Shape1 | null => null);
 
-    // @ts-expect-error - Missing 'a' property.
-    build1({ a: "a" });
     // @ts-expect-error - Missing 'b' property.
+    build1({ a: "a" });
+    // @ts-expect-error - Missing 'a' property.
     build1(() => ({ b: "b" }));
 
     type Shape2 = { c: string };
