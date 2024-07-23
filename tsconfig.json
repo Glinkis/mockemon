@@ -3,6 +3,8 @@
     "target": "ESNext",
     "module": "ESNext",
     "noEmit": true,
+    "declaration": true,
+    "isolatedDeclarations": true,
     "esModuleInterop": true,
     "moduleDetection": "force",
     "moduleResolution": "Bundler",
