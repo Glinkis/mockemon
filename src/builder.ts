@@ -20,9 +20,9 @@ type Overrideable<TValue> = {
 
 type Build<TContext, TValue> = (config: TContext) => TValue;
 
-type BuildInput<TValue, TOverride> = //
+type BuildInput<TValue, TOverride> =
   // If the override is a subset of the original value.
-  TOverride extends TValue //
+  TOverride extends TValue
     ? TOverride
     : // If the override keys are a subset of the keys in the original value.
       keyof TOverride extends keyof TValue
