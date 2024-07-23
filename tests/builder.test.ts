@@ -188,6 +188,28 @@ it("can override objects with union values", () => {
   expectTypeOf(mock2).toEqualTypeOf<Message & { brand: "X" }>();
 });
 
+it("can override objects with computed keys", () => {
+  const buildMock = createMockBuilder(
+    (f): PetOwner => ({
+      name: f.name(),
+      pet: f.pet(),
+    }),
+  );
+
+  for (const key of ["name", "pet"] as const) {
+    const mock1 = buildMock<Partial<PetOwner>>({
+      [key]: "Bob",
+    });
+
+    const mock2 = buildMock<Partial<PetOwner>>(() => ({
+      [key]: "Bob",
+    }));
+
+    expectTypeOf(mock1).toMatchTypeOf<PetOwner>();
+    expectTypeOf(mock2).toEqualTypeOf<PetOwner>();
+  }
+});
+
 it("can override objects with primitives", () => {
   const buildMock = createMockBuilder((f): string | PetOwner => ({
     name: f.name(),
