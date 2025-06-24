@@ -482,6 +482,30 @@ it("can override 'undefined' with 'null'", () => {
   expectTypeOf(mock2).toEqualTypeOf<null>();
 });
 
+it("can override 'null' with 'null'", () => {
+  const buildMock = createMockBuilder((): null => null);
+  const mock1 = buildMock(null);
+  const mock2 = buildMock(() => null);
+
+  expect(mock1).toBeNull();
+  expect(mock2).toBeNull();
+
+  expectTypeOf(mock1).toEqualTypeOf<null>();
+  expectTypeOf(mock2).toEqualTypeOf<null>();
+});
+
+it("can override 'undefined' with 'undefined'", () => {
+  const buildMock = createMockBuilder((): undefined => undefined);
+  const mock1 = buildMock(undefined);
+  const mock2 = buildMock(() => undefined);
+
+  expect(mock1).toBeUndefined();
+  expect(mock2).toBeUndefined();
+
+  expectTypeOf(mock1).toEqualTypeOf<undefined>();
+  expectTypeOf(mock2).toEqualTypeOf<undefined>();
+});
+
 describe("validation", () => {
   it("should warn if passing an incomplete override when using incompatible types", () => {
     type Shape1 = { a: string; b: string };
