@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.4.1
+
+- Fixed an incorrect return type.
+
 ## v4.4.0
 
 - Improved excess property checks.

@@ -24,7 +24,7 @@ type BuildInput<TValue, TOverride> =
   // If the output based on the input is invalid.
   BuildOutput<TValue, TOverride> extends never
     ? // Mark the input as invalid.
-      never & "Override does not match the value."
+      never
     : // If the override is a subset of the original value.
       keyof TOverride extends keyof TValue
       ? // Return the override type.
