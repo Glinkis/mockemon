@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.4.0
+
+- Improved excess property checks.
+
 ## v4.3.0
 
 - Improved override handling between arrays and objects.
