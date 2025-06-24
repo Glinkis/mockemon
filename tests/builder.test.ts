@@ -89,8 +89,14 @@ it("can override primitives", () => {
 it("can override primitives with objects", () => {
   const buildMock = createMockBuilder((f): string | PetOwner => f.name());
 
-  const mock1 = buildMock({ name: "Rafael", pet: "Cat" });
-  const mock2 = buildMock(() => ({ name: "Rafael", pet: "Cat" }));
+  const mock1 = buildMock({
+    name: "Rafael",
+    pet: "Cat",
+  });
+  const mock2 = buildMock(() => ({
+    name: "Rafael",
+    pet: "Cat",
+  }));
 
   expect(mock1).toEqual({
     name: "Rafael",
@@ -139,8 +145,12 @@ it("can override objects", () => {
     }),
   );
 
-  const mock1 = buildMock({ name: "Rafael" });
-  const mock2 = buildMock(() => ({ pet: "Parrot" }));
+  const mock1 = buildMock({
+    name: "Rafael",
+  });
+  const mock2 = buildMock(() => ({
+    pet: "Parrot",
+  }));
 
   expect(mock1).toEqual({
     name: "Rafael",
@@ -326,8 +336,14 @@ it("can override arrays with 'undefined'", () => {
 it("can override arrays with objects", () => {
   const buildMock = createMockBuilder((f): number[] | PetOwner => f.numbers());
 
-  const mock1 = buildMock({ name: "Rafael", pet: "Cat" });
-  const mock2 = buildMock(() => ({ name: "Rafael", pet: "Cat" }));
+  const mock1 = buildMock({
+    name: "Rafael",
+    pet: "Cat",
+  });
+  const mock2 = buildMock(() => ({
+    name: "Rafael",
+    pet: "Cat",
+  }));
 
   expect(mock1).toEqual({
     name: "Rafael",
@@ -427,8 +443,14 @@ it("can override 'undefined' with primitives", () => {
 it("can override 'undefined' with objects", () => {
   const buildMock = createMockBuilder((): undefined | PetOwner => undefined);
 
-  const mock1 = buildMock({ name: "Rafael", pet: "Cat" });
-  const mock2 = buildMock(() => ({ name: "Rafael", pet: "Cat" }));
+  const mock1 = buildMock({
+    name: "Rafael",
+    pet: "Cat",
+  });
+  const mock2 = buildMock(() => ({
+    name: "Rafael",
+    pet: "Cat",
+  }));
 
   expect(mock1).toEqual({
     name: "Rafael",
@@ -484,6 +506,7 @@ it("can override 'undefined' with 'null'", () => {
 
 it("can override 'null' with 'null'", () => {
   const buildMock = createMockBuilder((): null => null);
+
   const mock1 = buildMock(null);
   const mock2 = buildMock(() => null);
 
@@ -496,6 +519,7 @@ it("can override 'null' with 'null'", () => {
 
 it("can override 'undefined' with 'undefined'", () => {
   const buildMock = createMockBuilder((): undefined => undefined);
+
   const mock1 = buildMock(undefined);
   const mock2 = buildMock(() => undefined);
 
@@ -508,68 +532,120 @@ it("can override 'undefined' with 'undefined'", () => {
 
 describe("validation", () => {
   it("should warn if passing an incomplete override when using incompatible types", () => {
-    type Shape1 = { a: string; b: string };
-    const build1 = createMockBuilder((): Shape1 | null => null);
+    type Person = {
+      firstName: string;
+      lastName: string;
+    };
 
-    // @ts-expect-error - Missing 'b' property.
-    build1({ a: "a" });
-    // @ts-expect-error - Missing 'a' property.
-    build1(() => ({ b: "b" }));
+    const buildPersonOrNull = createMockBuilder((): Person | null => null);
 
-    type Shape2 = { c: string };
-    const build2 = createMockBuilder((): Shape1 | Shape2 => ({ c: "c" }));
+    // @ts-expect-error - Missing 'lastName' property.
+    buildPersonOrNull({
+      firstName: "Alice",
+    });
+    // @ts-expect-error - Missing 'firstName' property.
+    buildPersonOrNull(() => ({
+      lastName: "Smith",
+    }));
 
-    // @ts-expect-error - Missing 'b' property.
-    build2({ a: "a" });
-    // @ts-expect-error - Missing 'a' property.
-    build2(() => ({ b: "b" }));
+    type Animal = {
+      species: string;
+    };
 
-    type Tuple1 = [number, number];
-    const build3 = createMockBuilder((): Tuple1 | null => null);
+    const buildPersonOrAnimal = createMockBuilder((): Person | Animal => ({
+      species: "cat",
+    }));
+
+    // @ts-expect-error - Missing 'lastName' property.
+    buildPersonOrAnimal({
+      firstName: "Alice",
+    });
+    // @ts-expect-error - Missing 'firstName' property.
+    buildPersonOrAnimal(() => ({
+      lastName: "Smith",
+    }));
+
+    type Pair = [number, number];
+
+    const buildPairOrNull = createMockBuilder((): Pair | null => null);
 
     // @ts-expect-error - Missing second element.
-    build3([1]);
+    buildPairOrNull([1]);
     // @ts-expect-error - Missing first element.
-    build3(() => [, 1]);
+    buildPairOrNull(() => [, 1]);
   });
 
   it("should warn if passing extra properties in an override", () => {
-    type Shape1 = { a: string; b: string };
-    const build1 = createMockBuilder((): Shape1 => ({ a: "a", b: "b" }));
+    type Person = {
+      firstName: string;
+      lastName: string;
+    };
 
-    // @ts-expect-error - Extra 'c' property.
-    build1({ c: "c" });
-    // @ts-expect-error - Extra 'c' property.
-    build1(() => ({ c: "c" }));
+    const buildPerson = createMockBuilder(
+      (): Person => ({
+        firstName: "Alice",
+        lastName: "Smith",
+      }),
+    );
 
-    // @ts-expect-error - Extra 'c' property.
-    build1({ a: "a", b: "b", c: "c" });
-    // @ts-expect-error - Extra 'c' property.
-    build1(() => ({ a: "a", b: "b", c: "c" }));
+    buildPerson({
+      // @ts-expect-error - Extra 'age' property.
+      age: 30,
+    });
+    // @ts-expect-error - Extra 'age' property.
+    buildPerson(() => ({
+      age: 30,
+    }));
 
-    type Tuple1 = [number, number];
-    const build2 = createMockBuilder((): Tuple1 => [1, 2]);
+    // @ts-expect-error - Extra 'age' property.
+    buildPerson({
+      firstName: "Alice",
+      lastName: "Smith",
+      age: 30,
+    });
+    // @ts-expect-error - Extra 'age' property.
+    buildPerson(() => ({
+      firstName: "Alice",
+      lastName: "Smith",
+      age: 30,
+    }));
+
+    type Pair = [number, number];
+
+    const buildPair = createMockBuilder((): Pair => [1, 2]);
 
     // @ts-expect-error - Extra third element.
-    build2([1, 2, 3]);
+    buildPair([1, 2, 3]);
     // @ts-expect-error - Extra third element.
-    build2(() => [1, 2, 3]);
+    buildPair(() => [1, 2, 3]);
   });
 
-  it("should warn if passed keys dos not match either the original or the override", () => {
-    type Shape1 = { a: string; b: string };
-    type Shape2 = { c: string };
+  it("should warn if passed keys does not match either the original or the override", () => {
+    type Person = { firstName: string; lastName: string };
+    type Animal = { species: string };
 
-    const build1 = createMockBuilder((): Shape1 | Shape2 => ({ a: "a", b: "b" }));
+    const buildPersonOrAnimal = createMockBuilder((): Person | Animal => ({ firstName: "Alice", lastName: "Smith" }));
 
-    // @ts-expect-error - 'c' is not a valid key.
-    build1({ d: "d" });
-    // @ts-expect-error - 'c' is not a valid key.
-    build1(() => ({ d: "d" }));
+    buildPersonOrAnimal({
+      // @ts-expect-error - 'age' is not a valid key.
+      age: 30,
+    });
+    // @ts-expect-error - 'age' is not a valid key.
+    buildPersonOrAnimal(() => ({
+      age: 30,
+    }));
 
     // @ts-expect-error - Invalid combination of keys.
-    build1({ a: "a", b: "b", c: "c" });
+    buildPersonOrAnimal({
+      firstName: "Alice",
+      lastName: "Smith",
+      species: "cat",
+    });
     // @ts-expect-error - Invalid combination of keys.
-    build1(() => ({ a: "a", b: "b", c: "c" }));
+    buildPersonOrAnimal(() => ({
+      firstName: "Alice",
+      lastName: "Smith",
+      species: "cat",
+    }));
   });
 });
