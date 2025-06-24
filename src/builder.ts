@@ -77,10 +77,10 @@ type CreateMockBuilder<TConfig extends Configuration, TContext = TConfig["contex
 export function configureMockBuilder<TConfig extends Configuration>(config: TConfig): CreateMockBuilder<TConfig> {
   type TContext = TConfig["context"];
 
-  function createMockBuilder<TValue>(build: Build<TContext, TValue>) {
+  return function createMockBuilder<TValue>(build: Build<TContext, TValue>) {
     type TOverrideable = Overrideable<TValue>;
 
-    function buildMock<TOverride extends TOverrideable>(override?: Build<TContext, TOverride> | TOverride) {
+    return function buildMock<TOverride extends TOverrideable>(override?: Build<TContext, TOverride> | TOverride) {
       const original = build(config.context);
 
       // Unwrap the override if it's a function.
@@ -103,10 +103,6 @@ export function configureMockBuilder<TConfig extends Configuration>(config: TCon
       }
 
       return original;
-    }
-
-    return buildMock;
-  }
-
-  return createMockBuilder;
+    };
+  };
 }
