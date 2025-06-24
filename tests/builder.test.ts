@@ -308,7 +308,7 @@ it("can override objects with arrays", () => {
 it("can override arrays", () => {
   const buildMock = createMockBuilder((f): number[] => f.numbers());
 
-  const mock1 = buildMock([4, 5, 6] as const);
+  const mock1 = buildMock([4, 5, 6]);
   const mock2 = buildMock(() => [4, 5, 6]);
 
   expect(mock1).toEqual([4, 5, 6]);
