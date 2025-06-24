@@ -541,5 +541,8 @@ describe("validation", () => {
     build1({ c: "c" });
     // @ts-expect-error - Extra 'c' property.
     build1(() => ({ c: "c" }));
+
+    // @ts-expect-error - Extra 'c' property.
+    build1({ a: "a", b: "b", c: "c" });
   });
 });

@@ -22,12 +22,11 @@ type Build<TContext, TValue> = (config: TContext) => TValue;
 
 type BuildInput<TValue, TOverride> =
   // If the override is a subset of the original value.
-  TOverride extends TValue
-    ? TOverride
-    : // If the override keys are a subset of the keys in the original value.
-      keyof TOverride extends keyof TValue
-      ? TOverride
-      : TValue;
+  keyof TOverride extends keyof TValue
+    ? // Return the override type.
+      TOverride
+    : // Return the original type.
+      TValue;
 
 type BuildOutput<TValue, TOverride> =
   // If the override is identical to the original value.
