@@ -92,7 +92,7 @@ The builder can also be used to mock other types of values as well, such as prim
 
 ```ts
 // Mocks a string value
-const buildName = createMockBuilder((f) => f.person.fullName);
+const buildName = createMockBuilder((f) => f.person.fullName());
 
 const name1 = buildName();
 const name2 = buildName("John Doe");
@@ -116,7 +116,7 @@ const names3 = buildNames((f) => {
 
 #### Combining Builders
 
-If you have a value that that is a superset of another, you can reuse the builder of the subset in the builder of the superset by simply spreading it.
+If you have a value that is a superset of another, you can reuse the builder of the subset in the builder of the superset by simply spreading it.
 
 ```ts
 interface Person {
@@ -127,7 +127,7 @@ interface Person {
 const buildPerson = createMockBuilder(
   (f): Person => ({
     name: f.person.firstName(),
-    age: f.random.number(),
+    age: f.number.int(),
   }),
 );
 
