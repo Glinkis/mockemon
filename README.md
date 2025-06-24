@@ -38,7 +38,7 @@ The builder utility allows you to create strongly typed mocks for your tests, or
 To use the builder, you must first configure it. This is done by importing and calling `configureMockBuilder`
 
 ```ts
-import { configureMockBuilder } from "mockemon/builder";
+import { configureMockBuilder } from "mockemon";
 import { faker } from "@faker-js/faker";
 
 const createMockBuilder = configureMockBuilder({

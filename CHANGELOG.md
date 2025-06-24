@@ -1,8 +1,12 @@
 # Changelog
 
+## v5.5.1
+
+- Updated readme.
+
 ## v5.5.0
 
-- Removes index file, and exports builder module directly.
+- Removed index file, and exports builder module directly.
 
 ## v4.4.1
 
