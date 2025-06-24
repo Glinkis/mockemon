@@ -627,8 +627,14 @@ describe("validation", () => {
   });
 
   it("should warn if passed keys does not match either the original or the override", () => {
-    type Person = { firstName: string; lastName: string };
-    type Animal = { species: string };
+    type Person = {
+      firstName: string;
+      lastName: string;
+    };
+
+    type Animal = {
+      species: string;
+    };
 
     const buildPersonOrAnimal = createMockBuilder((): Person | Animal => ({
       firstName: "Alice",
