@@ -165,6 +165,30 @@ it("can override objects", () => {
   expectTypeOf(mock2).toEqualTypeOf<PetOwner>();
 });
 
+it("can override objects with empty objects", () => {
+  const buildMock = createMockBuilder(
+    (f): PetOwner => ({
+      name: f.name(),
+      pet: f.pet(),
+    }),
+  );
+
+  const mock1 = buildMock({});
+  const mock2 = buildMock(() => ({}));
+
+  expect(mock1).toEqual({
+    name: "Gustavo",
+    pet: "Dog",
+  });
+  expect(mock2).toEqual({
+    name: "Gustavo",
+    pet: "Dog",
+  });
+
+  expectTypeOf(mock1).toEqualTypeOf<PetOwner>();
+  expectTypeOf(mock2).toEqualTypeOf<PetOwner>();
+});
+
 it("can override objects with union values", () => {
   type Message = {
     type: "A" | "B" | "C";
@@ -289,6 +313,19 @@ it("can override arrays", () => {
 
   expect(mock1).toEqual([4, 5, 6]);
   expect(mock2).toEqual([4, 5, 6]);
+
+  expectTypeOf(mock1).toEqualTypeOf<number[]>();
+  expectTypeOf(mock2).toEqualTypeOf<number[]>();
+});
+
+it("can override arrays with empty arrays", () => {
+  const buildMock = createMockBuilder((f): number[] => f.numbers());
+
+  const mock1 = buildMock([]);
+  const mock2 = buildMock(() => []);
+
+  expect(mock1).toEqual([]);
+  expect(mock2).toEqual([]);
 
   expectTypeOf(mock1).toEqualTypeOf<number[]>();
   expectTypeOf(mock2).toEqualTypeOf<number[]>();

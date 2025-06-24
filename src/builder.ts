@@ -33,15 +33,21 @@ type BuildInput<TValue, TOverride> =
         TValue;
 
 type BuildOutput<TValue, TOverride> =
-  // If the override is identical to the original value.
-  TValue extends TOverride
-    ? TValue
-    : // If the override keys are a subset of the keys in the original value.
-      keyof TOverride extends keyof TValue
-      ? // We need to merge in the overrides.
-        TValue & TOverride
-      : // If the overrides don't match the value at all, it's invalid.
-        never;
+  // If the original value is an array.
+  TValue extends unknown[]
+    ? // If the override is an empty array.
+      TOverride extends never[]
+      ? TValue
+      : TOverride
+    : // If the override is identical to the original value.
+      TValue extends TOverride
+      ? TValue
+      : // If the override keys are a subset of the keys in the original value.
+        keyof TOverride extends keyof TValue
+        ? // We need to merge in the overrides.
+          TValue & TOverride
+        : // If the overrides don't match the value at all, it's invalid.
+          never;
 
 type CreateMockBuilder<TContext> = {
   <TValue>(build: Build<TContext, TValue>): {
