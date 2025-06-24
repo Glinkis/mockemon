@@ -1,9 +1,11 @@
 import { defineConfig } from "tsup";
 
-export default defineConfig({
+const config: unknown = defineConfig({
   entry: ["src"],
   format: ["cjs", "esm"],
   bundle: false,
   clean: true,
   dts: true,
 });
+
+export default config;
