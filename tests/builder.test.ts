@@ -532,4 +532,14 @@ describe("validation", () => {
     // @ts-expect-error - Missing first element.
     build3(() => [, 1]);
   });
+
+  it("should warn if passing extra properties in an override", () => {
+    type Shape1 = { a: string; b: string };
+    const build1 = createMockBuilder((): Shape1 => ({ a: "a", b: "b" }));
+
+    // @ts-expect-error - Extra 'c' property.
+    build1({ c: "c" });
+    // @ts-expect-error - Extra 'c' property.
+    build1(() => ({ c: "c" }));
+  });
 });
