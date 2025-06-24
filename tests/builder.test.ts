@@ -624,7 +624,10 @@ describe("validation", () => {
     type Person = { firstName: string; lastName: string };
     type Animal = { species: string };
 
-    const buildPersonOrAnimal = createMockBuilder((): Person | Animal => ({ firstName: "Alice", lastName: "Smith" }));
+    const buildPersonOrAnimal = createMockBuilder((): Person | Animal => ({
+      firstName: "Alice",
+      lastName: "Smith",
+    }));
 
     buildPersonOrAnimal({
       // @ts-expect-error - 'age' is not a valid key.
