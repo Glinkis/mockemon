@@ -6,13 +6,13 @@
 /**
  * A configuration object that is passed to the `configureMockBuilder` function.
  */
-interface Configuration {
+type Configuration = {
   /**
    * A value that will be passed to the default builder function.
    * This is usually a faker instance.
    */
   readonly context: unknown;
-}
+};
 
 type Overrideable<TValue> = {
   readonly [P in keyof TValue]?: TValue[P];
