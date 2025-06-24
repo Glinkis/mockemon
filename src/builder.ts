@@ -89,14 +89,14 @@ export function configureMockBuilder<TConfig extends Configuration>(config: TCon
       }
 
       // If both the original and the override are objects, we merge them.
-      if (typeof original === "object" && original !== null) {
-        if (typeof override === "object" && override !== null) {
+      if (original !== null && typeof original === "object" && !Array.isArray(original)) {
+        if (override !== null && typeof override === "object" && !Array.isArray(override)) {
           return { ...original, ...override };
         }
       }
 
       // To support passing undefined as an override,
-      // we can check if the override is passed as an argument,
+      // we can check if the override is passed as as argument,
       // instead of looking at the type.
       if (arguments.length) {
         return override;

@@ -258,6 +258,19 @@ it("can override objects with 'undefined'", () => {
   expectTypeOf(mock2).toEqualTypeOf<undefined>();
 });
 
+it("can override objects with arrays", () => {
+  const buildMock = createMockBuilder((f): PetOwner | number[] => ({
+    name: f.name(),
+    pet: f.pet(),
+  }));
+
+  const mock1 = buildMock([4, 5, 6]);
+  const mock2 = buildMock(() => [4, 5, 6]);
+
+  expect(mock1).toEqual([4, 5, 6]);
+  expect(mock2).toEqual([4, 5, 6]);
+});
+
 it("can override arrays", () => {
   const buildMock = createMockBuilder((f): number[] => f.numbers());
 
@@ -308,6 +321,23 @@ it("can override arrays with 'undefined'", () => {
 
   expectTypeOf(mock1).toEqualTypeOf<undefined>();
   expectTypeOf(mock2).toEqualTypeOf<undefined>();
+});
+
+it("can override arrays with objects", () => {
+  const buildMock = createMockBuilder((f): number[] | PetOwner => f.numbers());
+
+  const mock1 = buildMock({ name: "Rafael", pet: "Cat" });
+  const mock2 = buildMock(() => ({ name: "Rafael", pet: "Cat" }));
+
+  expect(mock1).toEqual({
+    name: "Rafael",
+    pet: "Cat",
+  });
+
+  expect(mock2).toEqual({
+    name: "Rafael",
+    pet: "Cat",
+  });
 });
 
 it("can override 'null'", () => {
