@@ -524,8 +524,8 @@ describe("validation", () => {
     // @ts-expect-error - Missing 'a' property.
     build2(() => ({ b: "b" }));
 
-    type Tuple2 = [number, number];
-    const build3 = createMockBuilder((): Tuple2 | null => null);
+    type Tuple1 = [number, number];
+    const build3 = createMockBuilder((): Tuple1 | null => null);
 
     // @ts-expect-error - Missing second element.
     build3([1]);
@@ -544,5 +544,13 @@ describe("validation", () => {
 
     // @ts-expect-error - Extra 'c' property.
     build1({ a: "a", b: "b", c: "c" });
+
+    type Tuple1 = [number, number];
+    const build2 = createMockBuilder((): Tuple1 => [1, 2]);
+
+    // @ts-expect-error - Extra third element.
+    build2([1, 2, 3]);
+    // @ts-expect-error - Extra third element.
+    build2(() => [1, 2, 3]);
   });
 });
