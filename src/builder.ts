@@ -40,10 +40,10 @@ type BuildOutput<TValue, TOverride> =
       : // If the overrides don't match the value at all, it's invalid.
         never;
 
-type CreateMockBuilder<TConfig extends Configuration, TContext = TConfig["context"]> = {
-  <TValue>(build: Build<TContext, TValue>): {
+type CreateMockBuilder<TConfig extends Configuration> = {
+  <TValue>(build: Build<TConfig["context"], TValue>): {
     <TOverride extends Overrideable<TValue>>(
-      override: Build<TContext, BuildInput<TValue, TOverride>>,
+      override: Build<TConfig["context"], BuildInput<TValue, TOverride>>,
     ): BuildOutput<TValue, TOverride>;
 
     <TOverride extends Overrideable<TValue>>( //
