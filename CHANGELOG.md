@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.3.0
+
+- Improved override handling between arrays and objects.
+
 ## v4.2.7
 
 - Optimized type validation logic.
