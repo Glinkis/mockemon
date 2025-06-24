@@ -1,4 +1,4 @@
-import { expect, it, describe } from "bun:test";
+import { expect, it, describe, g } from "bun:test";
 import { expectTypeOf } from "expect-type";
 import { configureMockBuilder } from "../src/builder.js";
 
@@ -398,8 +398,14 @@ it("can override 'null' with primitives", () => {
 it("can override 'null' with objects", () => {
   const buildMock = createMockBuilder((): null | PetOwner => null);
 
-  const mock1 = buildMock({ name: "Rafael", pet: "Cat" });
-  const mock2 = buildMock(() => ({ name: "Rafael", pet: "Cat" }));
+  const mock1 = buildMock({
+    name: "Rafael",
+    pet: "Cat",
+  });
+  const mock2 = buildMock(() => ({
+    name: "Rafael",
+    pet: "Cat",
+  }));
 
   expect(mock1).toEqual({
     name: "Rafael",
