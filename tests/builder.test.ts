@@ -1,4 +1,4 @@
-import { expect, it, describe, g } from "bun:test";
+import { expect, it, describe } from "bun:test";
 import { expectTypeOf } from "expect-type";
 import { configureMockBuilder } from "../src/builder.js";
 
