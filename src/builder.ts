@@ -42,14 +42,17 @@ type BuildOutput<TValue, TOverride> =
 
 type CreateMockBuilder<TConfig extends Configuration> = {
   <TValue>(build: Build<TConfig["context"], TValue>): {
+    // Support passing override as a function that returns a value.
     <TOverride extends Overrideable<TValue>>(
       override: Build<TConfig["context"], BuildInput<TValue, TOverride>>,
     ): BuildOutput<TValue, TOverride>;
 
+    // Support passing override as a value directly.
     <TOverride extends Overrideable<TValue>>( //
       override: BuildInput<TValue, TOverride>,
     ): BuildOutput<TValue, TOverride>;
 
+    // Support not passing an override at all.
     (): TValue;
   };
 };
