@@ -6,12 +6,12 @@
 /**
  * A configuration object that is passed to the `configureMockBuilder` function.
  */
-type Configuration = {
+type Configuration<TContext> = {
   /**
    * A value that will be passed to the default builder function.
    * This is usually a faker instance.
    */
-  readonly context: unknown;
+  readonly context: TContext;
 };
 
 type Overrideable<TValue> = {
@@ -43,11 +43,11 @@ type BuildOutput<TValue, TOverride> =
       : // If the overrides don't match the value at all, it's invalid.
         never;
 
-type CreateMockBuilder<TConfig extends Configuration> = {
-  <TValue>(build: Build<TConfig["context"], TValue>): {
+type CreateMockBuilder<TContext> = {
+  <TValue>(build: Build<TContext, TValue>): {
     // Support passing override as a function that returns a value.
     <TOverride extends Overrideable<TValue>>(
-      override: Build<TConfig["context"], BuildInput<TValue, TOverride>>,
+      override: Build<TContext, BuildInput<TValue, TOverride>>,
     ): BuildOutput<TValue, TOverride>;
 
     // Support passing override as a value directly.
@@ -80,9 +80,7 @@ type CreateMockBuilder<TConfig extends Configuration> = {
  * console.log(mock); // { name: "John Doe" }
  * ```
  */
-export function configureMockBuilder<TConfig extends Configuration>(config: TConfig): CreateMockBuilder<TConfig> {
-  type TContext = TConfig["context"];
-
+export function configureMockBuilder<TContext>(config: Configuration<TContext>): CreateMockBuilder<TContext> {
   return function createMockBuilder<TValue>(build: Build<TContext, TValue>) {
     type TOverrideable = Overrideable<TValue>;
 
