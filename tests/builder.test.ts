@@ -386,11 +386,13 @@ it("can override arrays with objects", () => {
     name: "Rafael",
     pet: "Cat",
   });
-
   expect(mock2).toEqual({
     name: "Rafael",
     pet: "Cat",
   });
+
+  expectTypeOf(mock1).toEqualTypeOf<PetOwner>();
+  expectTypeOf(mock2).toEqualTypeOf<PetOwner>();
 });
 
 it("can override 'null'", () => {
