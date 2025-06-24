@@ -544,6 +544,8 @@ describe("validation", () => {
 
     // @ts-expect-error - Extra 'c' property.
     build1({ a: "a", b: "b", c: "c" });
+    // @ts-expect-error - Extra 'c' property.
+    build1(() => ({ a: "a", b: "b", c: "c" }));
 
     type Tuple1 = [number, number];
     const build2 = createMockBuilder((): Tuple1 => [1, 2]);
@@ -552,5 +554,22 @@ describe("validation", () => {
     build2([1, 2, 3]);
     // @ts-expect-error - Extra third element.
     build2(() => [1, 2, 3]);
+  });
+
+  it("should warn if passed keys dos not match either the original or the override", () => {
+    type Shape1 = { a: string; b: string };
+    type Shape2 = { c: string };
+
+    const build1 = createMockBuilder((): Shape1 | Shape2 => ({ a: "a", b: "b" }));
+
+    // @ts-expect-error - 'c' is not a valid key.
+    build1({ d: "d" });
+    // @ts-expect-error - 'c' is not a valid key.
+    build1(() => ({ d: "d" }));
+
+    // @ts-expect-error - Invalid combination of keys.
+    build1({ a: "a", b: "b", c: "c" });
+    // @ts-expect-error - Invalid combination of keys.
+    build1(() => ({ a: "a", b: "b", c: "c" }));
   });
 });

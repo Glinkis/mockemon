@@ -21,12 +21,16 @@ type Overrideable<TValue> = {
 type Build<TContext, TValue> = (config: TContext) => TValue;
 
 type BuildInput<TValue, TOverride> =
-  // If the override is a subset of the original value.
-  keyof TOverride extends keyof TValue
-    ? // Return the override type.
-      TOverride
-    : // Return the original type.
-      TValue;
+  // If the output based on the input is invalid.
+  BuildOutput<TValue, TOverride> extends never
+    ? // Mark the input as invalid.
+      never
+    : // If the override is a subset of the original value.
+      keyof TOverride extends keyof TValue
+      ? // Return the override type.
+        TOverride
+      : // Return the original type.
+        TValue;
 
 type BuildOutput<TValue, TOverride> =
   // If the override is identical to the original value.
