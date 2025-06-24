@@ -14,7 +14,7 @@ type Configuration<TContext> = {
   readonly context: TContext;
 };
 
-type Overrideable<TValue> = {
+type StrictPartial<TValue> = {
   readonly [P in keyof TValue]?: TValue[P];
 };
 
@@ -46,12 +46,12 @@ type BuildOutput<TValue, TOverride> =
 type CreateMockBuilder<TContext> = {
   <TValue>(build: Build<TContext, TValue>): {
     // Support passing override as a function that returns a value.
-    <TOverride extends Overrideable<TValue>>(
+    <TOverride extends StrictPartial<TValue>>(
       override: Build<TContext, BuildInput<TValue, TOverride>>,
     ): BuildOutput<TValue, TOverride>;
 
     // Support passing override as a value directly.
-    <TOverride extends Overrideable<TValue>>( //
+    <TOverride extends StrictPartial<TValue>>( //
       override: BuildInput<TValue, TOverride>,
     ): BuildOutput<TValue, TOverride>;
 
@@ -82,9 +82,9 @@ type CreateMockBuilder<TContext> = {
  */
 export function configureMockBuilder<TContext>(config: Configuration<TContext>): CreateMockBuilder<TContext> {
   return function createMockBuilder<TValue>(build: Build<TContext, TValue>) {
-    type TOverrideable = Overrideable<TValue>;
-
-    return function buildMock<TOverride extends TOverrideable>(override?: Build<TContext, TOverride> | TOverride) {
+    return function buildMock<TOverride extends StrictPartial<TValue>>(
+      override?: Build<TContext, TOverride> | TOverride,
+    ) {
       const original = build(config.context);
 
       // Unwrap the override if it's a function.
