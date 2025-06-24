@@ -32,28 +32,16 @@ type BuildInput<TValue, TOverride> =
       : // Return the original type.
         TValue;
 
-// Returns true if we should return the original array type,
-// like if we pass an empty array as an override.
-// Laos handles the case of literal arrays, like "[] as const".
-type SpecificArrayOverride<TValue, TOverride> =
-  // If the original value is an array.
-  TValue extends unknown[]
-    ? // If the override is *roughly* an empty array.
-      TOverride extends never[]
-      ? // If the override is *exactly* an empty array.
-        TOverride extends []
-        ? false
-        : true
-      : false
-    : false;
-
 type BuildOutput<TValue, TOverride> =
-  // If the original value is an array.
-  SpecificArrayOverride<TValue, TOverride> extends true
+  // If the override is identical to the original value.
+  TValue extends TOverride
     ? TValue
-    : // If the override is identical to the original value.
-      TValue extends TOverride
-      ? TValue
+    : // If both the original value and the override are arrays.
+      TValue | TOverride extends unknown[]
+      ? // If the override is an empty array.
+        TOverride extends never[]
+        ? TValue
+        : TOverride
       : // If the override keys are a subset of the keys in the original value.
         keyof TOverride extends keyof TValue
         ? // We need to merge in the overrides.
