@@ -20,9 +20,7 @@
       "require": {
         "types": "./dist/index.d.ts",
         "default": "./dist/index.js"
-      },
-      "default": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      }
     },
     "./builder": {
       "import": {
@@ -32,9 +30,7 @@
       "require": {
         "types": "./dist/builder.d.ts",
         "default": "./dist/builder.js"
-      },
-      "default": "./dist/builder.js",
-      "types": "./dist/builder.d.ts"
+      }
     }
   },
   "scripts": {
