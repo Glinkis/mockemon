@@ -39,7 +39,7 @@ type BuildOutput<TValue, TOverride> =
   TValue extends TOverride
     ? TValue
     : // If both the original value and the override are arrays.
-      TValue | TOverride extends unknown[]
+      TValue extends unknown[]
       ? // If the override is approximately an empty array.
         TOverride extends never[]
         ? // If the override is exactly an empty array.
