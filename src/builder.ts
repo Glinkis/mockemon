@@ -38,9 +38,12 @@ type BuildOutput<TValue, TOverride> =
     ? TValue
     : // If both the original value and the override are arrays.
       TValue | TOverride extends unknown[]
-      ? // If the override is an empty array.
+      ? // If the override is approximately an empty array.
         TOverride extends never[]
-        ? TValue
+        ? // If the override is exactly an empty array.
+          TOverride extends []
+          ? TOverride
+          : TValue
         : TOverride
       : // If the override keys are a subset of the keys in the original value.
         keyof TOverride extends keyof TValue
