@@ -43,6 +43,14 @@ type BuildArrayOutput<TValue, TOverride> =
       : TValue
     : TOverride;
 
+type BuildOtherOutput<TValue, TOverride> =
+  // If the override keys are a subset of the keys in the original value.
+  keyof TOverride extends keyof TValue
+    ? // Augment the original value with the override.
+      TValue & TOverride
+    : // If the overrides don't match the value at all, mark output as invalid.
+      never;
+
 type BuildOutput<TValue, TOverride> =
   // If the override is identical to the original value.
   TValue extends TOverride
@@ -50,12 +58,7 @@ type BuildOutput<TValue, TOverride> =
     : // If the original value is an array.
       TValue extends unknown[]
       ? BuildArrayOutput<TValue, TOverride>
-      : // If the override keys are a subset of the keys in the original value.
-        keyof TOverride extends keyof TValue
-        ? // We need to merge in the overrides.
-          TValue & TOverride
-        : // If the overrides don't match the value at all, it's invalid.
-          never;
+      : BuildOtherOutput<TValue, TOverride>;
 
 type Build<TContext, TValue> = {
   (config: TContext): TValue;
