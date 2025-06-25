@@ -111,6 +111,58 @@ it("can override primitives with objects", () => {
   expectTypeOf(mock2).toEqualTypeOf<PetOwner>();
 });
 
+it("can override primitives with arrays", () => {
+  const buildMock = createMockBuilder((f): string | number[] => f.name());
+
+  const mock1 = buildMock([4, 5, 6]);
+  const mock2 = buildMock(() => [4, 5, 6]);
+
+  expect(mock1).toEqual([4, 5, 6]);
+  expect(mock2).toEqual([4, 5, 6]);
+
+  expectTypeOf(mock1).toEqualTypeOf<number[]>();
+  expectTypeOf(mock2).toEqualTypeOf<number[]>();
+});
+
+it("can override primitives with const arrays", () => {
+  const buildMock = createMockBuilder((f): string | number[] => f.name());
+
+  const mock1 = buildMock([4, 5, 6] as const);
+  const mock2 = buildMock(() => [4, 5, 6] as const);
+
+  expect(mock1).toEqual([4, 5, 6]);
+  expect(mock2).toEqual([4, 5, 6]);
+
+  expectTypeOf(mock1).toEqualTypeOf<[4, 5, 6]>();
+  expectTypeOf(mock2).toEqualTypeOf<[4, 5, 6]>();
+});
+
+it("can override primitives with empty arrays", () => {
+  const buildMock = createMockBuilder((f): string | number[] => f.name());
+
+  const mock1 = buildMock([]);
+  const mock2 = buildMock(() => []);
+
+  expect(mock1).toEqual([]);
+  expect(mock2).toEqual([]);
+
+  expectTypeOf(mock1).toEqualTypeOf<number[]>();
+  expectTypeOf(mock2).toEqualTypeOf<number[]>();
+});
+
+it("can override primitives with empty const arrays", () => {
+  const buildMock = createMockBuilder((f): string | number[] => f.name());
+
+  const mock1 = buildMock([] as const);
+  const mock2 = buildMock(() => [] as const);
+
+  expect(mock1).toEqual([]);
+  expect(mock2).toEqual([]);
+
+  expectTypeOf(mock1).toEqualTypeOf<[]>();
+  expectTypeOf(mock2).toEqualTypeOf<[]>();
+});
+
 it("can override primitives with 'null'", () => {
   const buildMock = createMockBuilder((f): string | null => f.name());
 
