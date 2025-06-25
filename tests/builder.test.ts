@@ -331,6 +331,19 @@ it("can override arrays with empty arrays", () => {
   expectTypeOf(mock2).toEqualTypeOf<number[]>();
 });
 
+it("can override arrays with const arrays", () => {
+  const buildMock = createMockBuilder((f): number[] => f.numbers());
+
+  const mock1 = buildMock([4, 5, 6] as const);
+  const mock2 = buildMock(() => [4, 5, 6] as const);
+
+  expect(mock1).toEqual([4, 5, 6]);
+  expect(mock2).toEqual([4, 5, 6]);
+
+  expectTypeOf(mock1).toEqualTypeOf<[4, 5, 6]>();
+  expectTypeOf(mock2).toEqualTypeOf<[4, 5, 6]>();
+});
+
 it("can override arrays with primitives", () => {
   const buildMock = createMockBuilder((f): number[] | string => f.numbers());
 
