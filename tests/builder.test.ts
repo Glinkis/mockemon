@@ -794,7 +794,7 @@ describe("merging builders", () => {
       pants: "jeans",
     }));
 
-    const buildPerson = createMockBuilder((f) => ({
+    const buildPerson = createMockBuilder(() => ({
       ...buildBody(),
       ...buildClothes(),
       face: "handsome",
