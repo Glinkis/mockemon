@@ -781,3 +781,43 @@ describe("validation", () => {
     }));
   });
 });
+
+describe("merging builders", () => {
+  it("should merge object keys", () => {
+    const buildBody = createMockBuilder(() => ({
+      arms: 2,
+      legs: 2,
+    }));
+
+    const buildClothes = createMockBuilder(() => ({
+      shirt: "t-shirt",
+      pants: "jeans",
+    }));
+
+    const buildPerson = createMockBuilder((f) => ({
+      ...buildBody(),
+      ...buildClothes(),
+      face: "handsome",
+    }));
+
+    const person = buildPerson({
+      face: "gruesome",
+    });
+
+    expect(person).toEqual({
+      arms: 2,
+      legs: 2,
+      shirt: "t-shirt",
+      pants: "jeans",
+      face: "gruesome",
+    });
+
+    expectTypeOf(person).toEqualTypeOf<{
+      arms: number;
+      legs: number;
+      shirt: string;
+      pants: string;
+      face: string;
+    }>();
+  });
+});
