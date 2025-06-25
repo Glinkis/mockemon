@@ -90,10 +90,8 @@ type CreateMockBuilder<TContext> = {
  * ```
  */
 export function configureMockBuilder<TContext>(config: Configuration<TContext>): CreateMockBuilder<TContext> {
-  return function createMockBuilder<TValue>(build: Build<TContext, TValue>) {
-    return function buildMock<TOverride extends StrictPartial<TValue>>(
-      override?: Build<TContext, TOverride> | TOverride,
-    ) {
+  function createMockBuilder<TValue>(build: Build<TContext, TValue>) {
+    function buildMock<TOverride extends StrictPartial<TValue>>(override?: Build<TContext, TOverride> | TOverride) {
       const original = build(config.context);
 
       // Unwrap the override if it's a function.
@@ -116,6 +114,10 @@ export function configureMockBuilder<TContext>(config: Configuration<TContext>):
       }
 
       return original;
-    };
-  };
+    }
+
+    return buildMock;
+  }
+
+  return createMockBuilder;
 }
