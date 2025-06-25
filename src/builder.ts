@@ -22,10 +22,6 @@ type StrictPartial<TValue> = {
   readonly [P in keyof TValue]?: TValue[P];
 };
 
-interface Build<TContext, TValue> {
-  (config: TContext): TValue;
-}
-
 type BuildInput<TValue, TOverride> =
   // If the output based on the input is invalid.
   BuildOutput<TValue, TOverride> extends never
@@ -57,6 +53,10 @@ type BuildOutput<TValue, TOverride> =
           TValue & TOverride
         : // If the overrides don't match the value at all, it's invalid.
           never;
+
+type Build<TContext, TValue> = {
+  (config: TContext): TValue;
+};
 
 type Builder<TContext, TValue> = {
   // Support passing override as a function that returns a value.
