@@ -25,7 +25,7 @@
   },
   "scripts": {
     "test": "bun test",
-    "build": "bun run tsup",
+    "build": "bun run tsdown",
     "prepublishOnly": "bun run build"
   },
   "files": [
@@ -35,7 +35,7 @@
     "@types/bun": "^1.2.17",
     "expect-type": "^0.19.0",
     "prettier": "^3.6.0",
-    "tsup": "^8.5.0",
+    "tsdown": "^0.12.9",
     "typescript": "^5.8.3"
   },
   "prettier": {
