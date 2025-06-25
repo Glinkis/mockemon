@@ -14,11 +14,17 @@ type Configuration<TContext> = {
   readonly context: TContext;
 };
 
+/**
+ * Allows only the properties of the original value to be overridden,
+ * but does not allow for additional properties.
+ */
 type StrictPartial<TValue> = {
   readonly [P in keyof TValue]?: TValue[P];
 };
 
-type Build<TContext, TValue> = (config: TContext) => TValue;
+interface Build<TContext, TValue> {
+  (config: TContext): TValue;
+}
 
 type BuildInput<TValue, TOverride> =
   // If the output based on the input is invalid.
