@@ -34,19 +34,22 @@ type BuildInput<TValue, TOverride> =
       : // Return the original type.
         TValue;
 
+type BuildArrayOutput<TValue, TOverride> =
+  // If the override is approximately an empty array.
+  TOverride extends never[]
+    ? // If the override is exactly an empty array.
+      TOverride extends []
+      ? TOverride
+      : TValue
+    : TOverride;
+
 type BuildOutput<TValue, TOverride> =
   // If the override is identical to the original value.
   TValue extends TOverride
     ? TValue
     : // If the original value is an array.
       TValue extends unknown[]
-      ? // If the override is approximately an empty array.
-        TOverride extends never[]
-        ? // If the override is exactly an empty array.
-          TOverride extends []
-          ? TOverride
-          : TValue
-        : TOverride
+      ? BuildArrayOutput<TValue, TOverride>
       : // If the override keys are a subset of the keys in the original value.
         keyof TOverride extends keyof TValue
         ? // We need to merge in the overrides.
