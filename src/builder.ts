@@ -58,21 +58,23 @@ type BuildOutput<TValue, TOverride> =
         : // If the overrides don't match the value at all, it's invalid.
           never;
 
-type CreateMockBuilder<TContext> = {
-  <TValue>(build: Build<TContext, TValue>): {
-    // Support passing override as a function that returns a value.
-    <TOverride extends StrictPartial<TValue>>(
-      override: Build<TContext, BuildInput<TValue, TOverride>>,
-    ): BuildOutput<TValue, TOverride>;
+type Builder<TContext, TValue> = {
+  // Support passing override as a function that returns a value.
+  <TOverride extends StrictPartial<TValue>>(
+    override: Build<TContext, BuildInput<TValue, TOverride>>,
+  ): BuildOutput<TValue, TOverride>;
 
-    // Support passing override as a value directly.
-    <TOverride extends StrictPartial<TValue>>( //
-      override: BuildInput<TValue, TOverride>,
-    ): BuildOutput<TValue, TOverride>;
+  // Support passing override as a value directly.
+  <TOverride extends StrictPartial<TValue>>( //
+    override: BuildInput<TValue, TOverride>,
+  ): BuildOutput<TValue, TOverride>;
 
-    // Support not passing an override at all.
-    (): TValue;
-  };
+  // Support not passing an override at all.
+  (): TValue;
+};
+
+type CreateBuilder<TContext> = {
+  <TValue>(build: Build<TContext, TValue>): Builder<TContext, TValue>;
 };
 
 /**
@@ -95,9 +97,9 @@ type CreateMockBuilder<TContext> = {
  * console.log(mock); // { name: "John Doe" }
  * ```
  */
-export function configureMockBuilder<TContext>(config: Configuration<TContext>): CreateMockBuilder<TContext> {
-  function createMockBuilder<TValue>(build: Build<TContext, TValue>) {
-    function buildMock<TOverride extends StrictPartial<TValue>>(override?: Build<TContext, TOverride> | TOverride) {
+export function configureMockBuilder<TContext>(config: Configuration<TContext>): CreateBuilder<TContext> {
+  function createBuilder<TValue>(build: Build<TContext, TValue>) {
+    function builder<TOverride extends StrictPartial<TValue>>(override?: Build<TContext, TOverride> | TOverride) {
       const original = build(config.context);
 
       // Unwrap the override if it's a function.
@@ -122,8 +124,8 @@ export function configureMockBuilder<TContext>(config: Configuration<TContext>):
       return original;
     }
 
-    return buildMock;
+    return builder;
   }
 
-  return createMockBuilder;
+  return createBuilder;
 }
