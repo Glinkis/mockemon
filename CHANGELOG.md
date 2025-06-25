@@ -1,5 +1,9 @@
 # Changelog
 
+## v5.5.3
+
+- Updated types.
+
 ## v5.5.2
 
 - Improved handling of array overrides.
