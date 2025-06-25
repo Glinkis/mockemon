@@ -291,7 +291,7 @@ it("can override objects with computed keys", () => {
       [key]: "Bob",
     }));
 
-    expectTypeOf(mock1).toMatchTypeOf<PetOwner>();
+    expectTypeOf(mock1).toEqualTypeOf<PetOwner>();
     expectTypeOf(mock2).toEqualTypeOf<PetOwner>();
   }
 });
