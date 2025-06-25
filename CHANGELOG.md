@@ -1,5 +1,9 @@
 # Changelog
 
+## v5.5.4
+
+- Updated types.
+
 ## v5.5.3
 
 - Updated types.
